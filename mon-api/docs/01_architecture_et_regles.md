@@ -1,7 +1,7 @@
 # Règles Globales du Backend (Node.js / Express)
 
 ## Contexte
-Projet de plateforme interne de suivi des SAE. [cite_start]L'architecture est découplée[cite: 39]. [cite_start]Le backend est une API REST Node.js qui communique en JSON avec un frontend Vue.js [cite: 40, 44, 275-276].
+Projet de plateforme interne de suivi des SAE. [cite_start]L'architecture est découplée[cite: 39]. [cite_start]Le backend est une API REST Node.js qui communique en JSON avec un frontend Angular [cite: 40, 44, 275-276].
 
 ## Stack Technique
 * **Environnement :** Node.js
