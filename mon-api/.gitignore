@@ -1,0 +1,13 @@
+# Dépendances Node.js (TRÈS IMPORTANT)
+node_modules/
+
+# Variables d'environnement (Mots de passe BDD, clés secrètes)
+.env
+
+# Fichiers système Mac (Si quelqu'un du groupe est sur Mac)
+.DS_Store
+
+# Fichiers de logs générés par npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
