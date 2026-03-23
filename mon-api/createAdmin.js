@@ -17,7 +17,7 @@ async function main() {
       password: hashedPassword,
       nom: 'Admin',
       prenom: 'Test',
-      role: 'ADMIN', // ou ce qui correspond à votre schéma Prisma
+      role: 'ROLE_ADMIN', // ou ce qui correspond à votre schéma Prisma
     },
   });
 
