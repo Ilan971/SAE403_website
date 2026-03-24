@@ -38,17 +38,17 @@
           </div>
         </router-link>
 
-        <!-- Nouveau lien Utilisateurs -->
+        <!-- Nouveau lien Annonces -->
         <router-link 
-          to="/users" 
+          to="/annonces" 
           class="block px-4 py-3 rounded-lg transition-all duration-200 font-medium"
-          :class="[ $route.path.startsWith('/users') ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' ]"
+          :class="[ $route.path.startsWith('/annonces') ? 'bg-indigo-600 text-white shadow-md' : 'text-gray-400 hover:bg-gray-800 hover:text-white' ]"
         >
           <div class="flex items-center">
             <svg class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
             </svg>
-            Utilisateurs
+            Annonces
           </div>
         </router-link>
       </nav>
