@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginView from '../views/LoginView.vue';
+import AdminLayout from '../layouts/AdminLayout.vue';
 import { useAuthStore } from '../stores/authStore';
 
 const router = createRouter({
@@ -12,13 +13,24 @@ const router = createRouter({
     },
     {
       path: '/',
-      redirect: '/dashboard'
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('../views/DashboardView.vue'),
-      meta: { requiresAuth: true }
+      component: AdminLayout,
+      meta: { requiresAuth: true }, // Toutes les routes enfants sont protégées
+      children: [
+        {
+          path: '',
+          redirect: '/dashboard'
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('../views/DashboardView.vue'),
+        },
+        {
+          path: 'sae',
+          name: 'saeList',
+          component: () => import('../views/SaeListView.vue'),
+        }
+      ]
     }
   ]
 });
