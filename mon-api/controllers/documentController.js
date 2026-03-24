@@ -21,9 +21,18 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
     try {
-        const { nom, cheminFichier, type, saeId } = req.body;
+        const { nom, type, saeId } = req.body;
         if (!['consigne', 'ressource', 'rendu'].includes(type)) {
             return res.status(400).json({ message: 'Type de document invalide' });
+        }
+        
+        let cheminFichier = req.body.cheminFichier;
+        if (req.file) {
+            cheminFichier = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        }
+        
+        if (!cheminFichier) {
+            return res.status(400).json({ message: 'Un fichier ou un lien est requis' });
         }
         
         const document = await prisma.document.create({
@@ -42,7 +51,15 @@ exports.update = async (req, res) => {
             return res.status(400).json({ message: 'Type de document invalide' });
         }
 
-        const data = { nom, cheminFichier, type };
+        const data = { type };
+        if (nom) data.nom = nom;
+        
+        if (req.file) {
+            data.cheminFichier = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        } else if (cheminFichier) {
+            data.cheminFichier = cheminFichier;
+        }
+
         if (saeId) data.saeId = parseInt(saeId);
 
         const document = await prisma.document.update({

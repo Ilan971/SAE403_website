@@ -29,6 +29,16 @@ const router = createRouter({
           path: 'sae',
           name: 'saeList',
           component: () => import('../views/SaeListView.vue'),
+        },
+        {
+          path: 'sae/:id',
+          name: 'saeDetail',
+          component: () => import('../views/SaeDetailView.vue'),
+        },
+        {
+          path: 'users',
+          name: 'userList',
+          component: () => import('../views/UserListView.vue'),
         }
       ]
     }

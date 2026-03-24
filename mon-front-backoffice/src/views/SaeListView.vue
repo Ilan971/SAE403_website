@@ -66,7 +66,9 @@
           <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-for="sae in saes" :key="sae.id" class="hover:bg-gray-50 transition-colors duration-150">
               <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                {{ sae.titre }}
+                <router-link :to="`/sae/${sae.id}`" class="hover:text-indigo-600 hover:underline transition-colors cursor-pointer">
+                  {{ sae.titre }}
+                </router-link>
               </td>
               <td class="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" :title="sae.description">
                 {{ sae.description }}
@@ -83,6 +85,7 @@
                 {{ sae.dateEcheance ? new Date(sae.dateEcheance).toLocaleDateString('fr-FR') : 'Non définie' }}
               </td>
               <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                <router-link :to="`/sae/${sae.id}`" class="text-blue-600 hover:text-blue-900 transition-colors focus:outline-none mr-4 font-bold cursor-pointer">Détails</router-link>
                 <button @click="openEditModal(sae)" class="text-indigo-600 hover:text-indigo-900 transition-colors focus:outline-none">Modifier</button>
                 <button @click="deleteSae(sae.id)" class="text-red-600 hover:text-red-900 ml-4 transition-colors focus:outline-none">Supprimer</button>
               </td>
