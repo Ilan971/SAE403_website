@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api';
+import { toast } from 'vue3-toastify';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -16,8 +17,11 @@ export const useAuthStore = defineStore('auth', {
         localStorage.setItem('token', this.token);
         localStorage.setItem('user', JSON.stringify(this.user));
         
+        toast.success("Connexion réussie !");
+        
         return true;
       } catch (error) {
+        toast.error("Email ou mot de passe incorrect.");
         throw error;
       }
     },
@@ -26,6 +30,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      toast.info("Vous êtes déconnecté.");
     },
     initAuth() {
       const token = localStorage.getItem('token');

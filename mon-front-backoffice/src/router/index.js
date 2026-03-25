@@ -57,6 +57,12 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !authStore.token) {
     return '/login';
   }
+  
+  if (to.meta.requiresAuth && authStore.user && authStore.user.role !== 'ROLE_ADMIN') {
+    authStore.logout();
+    alert("Accès refusé. Le backoffice est réservé aux administrateurs.");
+    return '/login';
+  }
 });
 
 export default router;

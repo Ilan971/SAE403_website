@@ -22,6 +22,33 @@
       </div>
     </div>
     
+    <!-- Filtres et Recherche -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-6" v-if="!isLoading && saes.length > 0">
+      <div class="flex-1">
+        <label for="search" class="sr-only">Rechercher</label>
+        <div class="relative rounded-md shadow-sm">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input type="text" id="search" v-model="searchQuery" class="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rechercher une SAE par titre...">
+        </div>
+      </div>
+      <div class="sm:w-64">
+        <label for="semester-filter" class="sr-only">Filtrer par semestre</label>
+        <select id="semester-filter" v-model="selectedSemester" class="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          <option value="">Tous les semestres</option>
+          <option value="1">Semestre 1</option>
+          <option value="2">Semestre 2</option>
+          <option value="3">Semestre 3</option>
+          <option value="4">Semestre 4</option>
+          <option value="5">Semestre 5</option>
+          <option value="6">Semestre 6</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Skeleton Loader (Pendant chargement Axios) -->
     <div v-if="isLoading" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden p-6 animate-pulse">
       <div class="h-6 bg-gray-200 rounded w-1/4 mb-8"></div>
@@ -46,6 +73,22 @@
       </p>
     </div>
 
+    <!-- Empty State (Recherche infructueuse) -->
+    <div v-else-if="filteredSaes.length === 0" class="bg-white px-6 py-12 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl flex flex-col items-center justify-center text-center">
+      <div class="bg-indigo-50 p-3 rounded-full mb-3">
+        <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 class="text-base font-medium text-gray-900">Aucun résultat pour cette recherche</h3>
+      <p class="text-sm text-gray-500 mt-1">
+        Essayez de modifier vos termes de recherche ou de changer le filtre de semestre.
+      </p>
+      <button @click="searchQuery = ''; selectedSemester = ''" class="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+        Réinitialiser les filtres
+      </button>
+    </div>
+
     <!-- Tableau moderne (Affichage des SAE) -->
     <div v-else class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
       <div v-if="isProcessing" class="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
@@ -64,7 +107,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="sae in saes" :key="sae.id" class="hover:bg-gray-50 transition-colors duration-150">
+            <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-gray-50 transition-colors duration-150">
               <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                 <router-link :to="`/sae/${sae.id}`" class="hover:text-indigo-600 hover:underline transition-colors cursor-pointer">
                   {{ sae.titre }}
@@ -190,12 +233,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import api from '../services/api';
 
 const saes = ref([]);
 const isLoading = ref(true);
 const isProcessing = ref(false); // overlay pendant suppression/maj
+
+// --- Filtres et Recherche ---
+const searchQuery = ref('');
+const selectedSemester = ref('');
+
+// --- Filtrage Réactif ---
+const filteredSaes = computed(() => {
+  return saes.value.filter(sae => {
+    // Filtrer par titre (insensible à la casse)
+    const matchQuery = sae.titre.toLowerCase().includes(searchQuery.value.trim().toLowerCase());
+    
+    // Filtrer par semestre
+    const matchSemester = selectedSemester.value === '' || String(sae.semestre) === String(selectedSemester.value);
+    
+    return matchQuery && matchSemester;
+  });
+});
 
 // Gestion du modal
 const showModal = ref(false);
@@ -216,7 +276,7 @@ const formData = ref({
 const fetchSaes = async () => {
   try {
     const response = await api.get('/sae');
-    saes.value = response.data || [];
+    saes.value = response.data.data || response.data || [];
   } catch (error) {
     console.error('Erreur lors de la récupération des SAE:', error);
   } finally {
@@ -286,8 +346,7 @@ const submitForm = async () => {
       dateEcheance: new Date(formData.value.dateEcheance).toISOString()
     };
     
-    // Le middleware isAdmin exige d'être ADMIN. Si le back renvoie une erreur 403, 
-    // l'intercepteur configuré nous déconnectera, ou formError le gèrera.
+    // Le middleware isAdmin exige d'être ADMIN.
     
     if (isEditing.value) {
       await api.put(`/sae/${editingId.value}`, payload);
