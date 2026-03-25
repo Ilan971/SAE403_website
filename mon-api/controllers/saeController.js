@@ -13,7 +13,7 @@ exports.getOne = async (req, res) => {
     try {
         const sae = await prisma.sae.findUnique({
             where: { id: parseInt(req.params.id) },
-            include: { documents: true, annonces: true, users: { select: { id: true, nom: true, prenom: true } } }
+            include: { documents: true, annonces: true, users: { select: { id: true, nom: true, prenom: true, role: true } } }
         });
         if (!sae) return res.status(404).json({ message: 'SAE non trouvée' });
         res.json(sae);
@@ -57,5 +57,53 @@ exports.delete = async (req, res) => {
         res.json({ message: 'SAE supprimée' });
     } catch (error) {
         res.status(500).json({ message: 'Erreur de suppression', error: error.message });
+    }
+};
+
+exports.assignUsers = async (req, res) => {
+    try {
+        const saeId = parseInt(req.params.id);
+        const { userIds } = req.body;
+
+        if (!Array.isArray(userIds)) {
+            return res.status(400).json({ message: 'userIds doit être un tableau.' });
+        }
+
+        const connectData = userIds.map(id => ({ id: parseInt(id) }));
+
+        const sae = await prisma.sae.update({
+            where: { id: saeId },
+            data: {
+                users: {
+                    connect: connectData
+                }
+            },
+            include: { users: { select: { id: true, nom: true, prenom: true, role: true } } }
+        });
+
+        res.json({ message: 'Utilisateurs assignés avec succès.', sae });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de l\'assignation.', error: error.message });
+    }
+};
+
+exports.removeUser = async (req, res) => {
+    try {
+        const saeId = parseInt(req.params.id);
+        const userId = parseInt(req.params.userId);
+
+        const sae = await prisma.sae.update({
+            where: { id: saeId },
+            data: {
+                users: {
+                    disconnect: { id: userId }
+                }
+            },
+            include: { users: { select: { id: true, nom: true, prenom: true, role: true } } }
+        });
+
+        res.json({ message: 'Utilisateur retiré de la SAE avec succès.', sae });
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur lors de la désassignation.', error: error.message });
     }
 };

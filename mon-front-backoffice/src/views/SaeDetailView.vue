@@ -140,6 +140,56 @@
             </div>
           </div>
         </div>
+
+        <!-- NOUVELLE SECTION: Membres Assignés -->
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
+          <!-- loader overlay -->
+          <div v-if="isProcessingMembers" class="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center"></div>
+
+          <div class="px-6 py-5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center">
+              <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <h3 class="text-base font-semibold leading-6 text-gray-900">
+                Membres assignés
+              </h3>
+            </div>
+            <!-- Bouton Assigner -->
+            <button @click="openAssignModal" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors focus:outline-none flex items-center bg-indigo-50 px-3 py-1.5 rounded-md hover:bg-indigo-100">
+              <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+              </svg>
+              Gérer
+            </button>
+          </div>
+          
+          <div class="p-0">
+            <ul v-if="sae.users && sae.users.length > 0" class="divide-y divide-gray-100">
+              <li v-for="user in sae.users" :key="user.id" class="px-6 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors group">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-bold text-xs uppercase">
+                    {{ user.prenom.charAt(0) }}{{ user.nom.charAt(0) }}
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">{{ user.prenom }} {{ user.nom }}</p>
+                    <p class="text-xs text-gray-500">{{ user.role === 'ROLE_ADMIN' ? 'Professeur/Admin' : 'Étudiant' }}</p>
+                  </div>
+                </div>
+                <!-- Action Retirer -->
+                <button @click="removeUser(user.id)" class="text-gray-400 hover:text-red-600 transition-colors opacity-100 lg:opacity-0 lg:group-hover:opacity-100 p-1 rounded-full hover:bg-red-50 focus:outline-none" title="Désassigner cet utilisateur">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </li>
+            </ul>
+            <div v-else class="px-6 py-6 text-center">
+              <p class="text-sm text-gray-500">Aucun membre assigné.</p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     
@@ -228,6 +278,60 @@
         </div>
       </div>
     </div>
+    <!-- NOUVELLE MODALE: Gérer les membres (Assignations) -->
+    <div v-if="showAssignModal" class="relative z-30" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
+      <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
+            
+            <div class="bg-gray-50 px-4 py-4 sm:px-6 border-b border-gray-100 flex justify-between items-center">
+              <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">Gérer les membres assignés</h3>
+              <button @click="closeAssignModal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+            
+            <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              <p class="text-sm text-gray-500 mb-4">Sélectionnez les utilisateurs qui doivent faire partie de cette SAE.</p>
+              
+              <div v-if="isLoadingUsers" class="flex justify-center p-4">
+                <svg class="animate-spin h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+              <div v-else class="max-h-60 overflow-y-auto border border-gray-200 rounded-md">
+                <ul class="divide-y divide-gray-100">
+                  <li v-for="user in allUsers" :key="user.id" class="px-4 py-3 flex items-center hover:bg-gray-50">
+                    <div class="flex items-center h-5">
+                      <input :id="'user-' + user.id" v-model="selectedUserIds" :value="user.id" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
+                    </div>
+                    <label :for="'user-' + user.id" class="ml-3 flex flex-col cursor-pointer w-full">
+                      <span class="text-sm font-medium text-gray-900">{{ user.prenom }} {{ user.nom }}</span>
+                      <span class="text-xs text-gray-500">{{ user.email }} • {{ user.role === 'ROLE_ADMIN' ? 'Professeur' : 'Étudiant' }}</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 z-10">
+              <button @click="submitAssignForm" :disabled="isSavingAssign" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto transition-colors disabled:opacity-50">
+                <span v-if="isSavingAssign">Enregistrement...</span>
+                <span v-else>Sauvegarder</span>
+              </button>
+              <button type="button" @click="closeAssignModal" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-colors">
+                Annuler
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -235,6 +339,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import api from '../services/api';
+import { toast } from 'vue3-toastify';
 
 const route = useRoute();
 const sae = ref(null);
@@ -345,6 +450,61 @@ const deleteDocument = async (docId) => {
       alert("Erreur lors de la suppression.");
     }
     isProcessing.value = false;
+  }
+};
+
+// --- Fonctions Assignation (Membres) ---
+const showAssignModal = ref(false);
+const isSavingAssign = ref(false);
+const isLoadingUsers = ref(false);
+const allUsers = ref([]);
+const selectedUserIds = ref([]);
+const isProcessingMembers = ref(false);
+
+const openAssignModal = async () => {
+  showAssignModal.value = true;
+  isLoadingUsers.value = true;
+  try {
+    const response = await api.get('/users');
+    allUsers.value = response.data.data || response.data;
+    if (sae.value && sae.value.users) {
+      selectedUserIds.value = sae.value.users.map(u => u.id);
+    }
+  } catch (error) {
+    toast.error("Erreur utilisateurs.");
+    closeAssignModal();
+  } finally {
+    isLoadingUsers.value = false;
+  }
+};
+
+const closeAssignModal = () => showAssignModal.value = false;
+
+const submitAssignForm = async () => {
+  isSavingAssign.value = true;
+  try {
+    await api.post(`/sae/${route.params.id}/assign`, { userIds: selectedUserIds.value });
+    toast.success("Membres mis à jour avec succès.");
+    closeAssignModal();
+    isProcessingMembers.value = true;
+    await loadSae();
+  } catch (error) {
+    toast.error("Erreur de mise à jour des membres.");
+  } finally {
+    isSavingAssign.value = false;
+  }
+};
+
+const removeUser = async (userId) => {
+  if (!confirm("Retirer cet utilisateur ?")) return;
+  isProcessingMembers.value = true;
+  try {
+    await api.delete(`/sae/${route.params.id}/remove-user/${userId}`);
+    toast.success("Membre retiré.");
+    await loadSae();
+  } catch (error) {
+    toast.error("Erreur de retrait du membre.");
+    isProcessingMembers.value = false;
   }
 };
 </script>
