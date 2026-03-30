@@ -203,6 +203,35 @@
                   <label for="dateEcheance" class="block text-sm font-bold text-gray-300 mb-2">Date d'échéance</label>
                   <input type="date" id="dateEcheance" v-model="formData.dateEcheance" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors [color-scheme:dark]">
                 </div>
+
+                <!-- Membres Assignés -->
+                <div>
+                  <label class="block text-sm font-medium leading-6 text-gray-900 mb-2">Membres assignés</label>
+                  <div v-if="isLoadingUsers" class="flex justify-center py-4">
+                    <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </div>
+                  <div v-else class="border border-gray-200 rounded-md overflow-hidden">
+                    <!-- Option Tout Sélectionner -->
+                    <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-200 flex items-center">
+                      <input id="select-all" type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
+                      <label for="select-all" class="ml-3 text-sm font-semibold text-gray-700 cursor-pointer">Tout sélectionner</label>
+                      <span class="ml-auto text-xs text-gray-400">{{ selectedUserIds.length }}/{{ allUsers.length }}</span>
+                    </div>
+                    <!-- Liste des utilisateurs -->
+                    <ul class="max-h-40 overflow-y-auto divide-y divide-gray-100">
+                      <li v-for="user in allUsers" :key="user.id" class="px-4 py-2.5 flex items-center hover:bg-gray-50">
+                        <input :id="'modal-user-' + user.id" v-model="selectedUserIds" :value="user.id" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
+                        <label :for="'modal-user-' + user.id" class="ml-3 flex flex-col cursor-pointer w-full">
+                          <span class="text-sm font-medium text-gray-900">{{ user.prenom }} {{ user.nom }}</span>
+                          <span class="text-xs text-gray-500">{{ user.email }} • {{ user.role === 'ROLE_ADMIN' ? 'Professeur' : 'Étudiant' }}</span>
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
                 
                 <!-- Feedback d'erreur d'enregistrement -->
                 <div v-if="formError" class="text-sm font-medium text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-xl mt-4 flex items-center">
@@ -231,6 +260,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import api from '../services/api';
+import { toast } from 'vue3-toastify';
 
 const saes = ref([]);
 const isLoading = ref(true);
@@ -261,6 +291,39 @@ const formData = ref({
   dateEcheance: ''
 });
 
+<<<<<<< HEAD
+=======
+// --- Gestion des membres ---
+const allUsers = ref([]);
+const selectedUserIds = ref([]);
+const isLoadingUsers = ref(false);
+
+const isAllSelected = computed(() => {
+  return allUsers.value.length > 0 && selectedUserIds.value.length === allUsers.value.length;
+});
+
+const toggleSelectAll = () => {
+  if (isAllSelected.value) {
+    selectedUserIds.value = [];
+  } else {
+    selectedUserIds.value = allUsers.value.map(u => u.id);
+  }
+};
+
+const loadUsers = async () => {
+  isLoadingUsers.value = true;
+  try {
+    const response = await api.get('/users');
+    allUsers.value = response.data.data || response.data;
+  } catch (error) {
+    console.error('Erreur chargement utilisateurs:', error);
+  } finally {
+    isLoadingUsers.value = false;
+  }
+};
+
+// Charger la liste
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
 const fetchSaes = async () => {
   try {
     const response = await api.get('/sae');
@@ -276,10 +339,22 @@ onMounted(() => {
   fetchSaes();
 });
 
+<<<<<<< HEAD
 const openCreateModal = () => {
   isEditing.value = false;
   editingId.value = null;
   formError.value = '';
+=======
+// --- ACTIONS CRUD ---
+
+// OUVRIR CREATION
+const openCreateModal = async () => {
+  isEditing.value = false;
+  editingId.value = null;
+  formError.value = '';
+  selectedUserIds.value = [];
+  // Reset fields
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   formData.value = { 
     titre: '', 
     description: '', 
@@ -288,9 +363,15 @@ const openCreateModal = () => {
     dateEcheance: '' 
   };
   showModal.value = true;
+  await loadUsers();
 };
 
+<<<<<<< HEAD
 const openEditModal = (sae) => {
+=======
+// OUVRIR MODIFICATION
+const openEditModal = async (sae) => {
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   isEditing.value = true;
   editingId.value = sae.id;
   formError.value = '';
@@ -300,8 +381,21 @@ const openEditModal = (sae) => {
     formattedDate = new Date(sae.dateEcheance).toISOString().split('T')[0];
   }
   
+<<<<<<< HEAD
   formData.value = { ...sae, dateEcheance: formattedDate };
+=======
+  // Cloner les données pour éviter de modifier la table directement avant save
+  formData.value = { 
+    ...sae, 
+    dateEcheance: formattedDate 
+  };
+  
+  // Pré-cocher les membres déjà assignés
+  selectedUserIds.value = sae.users ? sae.users.map(u => u.id) : [];
+  
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   showModal.value = true;
+  await loadUsers();
 };
 
 const closeModal = () => {
@@ -314,15 +408,24 @@ const submitForm = async () => {
   
   try {
     const payload = {
-      ...formData.value,
+      titre: formData.value.titre,
+      description: formData.value.description,
       semestre: Number(formData.value.semestre),
+<<<<<<< HEAD
       dateEcheance: new Date(formData.value.dateEcheance).toISOString()
+=======
+      anneeUniversitaire: formData.value.anneeUniversitaire,
+      dateEcheance: new Date(formData.value.dateEcheance).toISOString(),
+      userIds: selectedUserIds.value
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
     };
     
     if (isEditing.value) {
       await api.put(`/sae/${editingId.value}`, payload);
+      toast.success('SAE modifiée avec succès.');
     } else {
       await api.post('/sae', payload);
+      toast.success('SAE créée avec succès.');
     }
     
     closeModal();
@@ -347,8 +450,17 @@ const deleteSae = async (id) => {
   try {
     await api.delete(`/sae/${id}`);
     saes.value = saes.value.filter(s => s.id !== id);
+    toast.success('SAE supprimée avec succès.');
   } catch (error) {
     console.error('Erreur lors de la suppression:', error);
+<<<<<<< HEAD
+=======
+    if (error.response && error.response.status === 403) {
+      toast.error("Vous n'avez pas les droits d'administration.");
+    } else {
+      toast.error("Une erreur serveur est survenue lors de la suppression.");
+    }
+>>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   } finally {
     isProcessing.value = false;
   }
