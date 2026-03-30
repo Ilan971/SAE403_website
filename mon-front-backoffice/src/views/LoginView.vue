@@ -1,84 +1,92 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Backoffice SAE
+  <div class="min-h-screen bg-[#0F131A] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden h-screen bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop');">
+    <!-- Overlay sombre pour contraster avec l'image -->
+    <div class="absolute inset-0 bg-[#0F131A]/80 backdrop-blur-[2px] z-0"></div>
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10 flex flex-col items-center">
+      <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6">
+        <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
+        </svg>
+      </div>
+      <h2 class="mt-2 text-center text-4xl font-extrabold text-white tracking-tight">
+        Bienvenue sur <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-[#7C5CFC]">Bostocampus</span>
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
-        Connectez-vous pour accéder à la plateforme
+      <p class="mt-3 text-center text-[15px] font-medium text-gray-400">
+        Connectez-vous pour accéder à votre espace
       </p>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-100">
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-[440px] relative z-10">
+      <div class="bg-[#181D23]/80 backdrop-blur-xl py-10 px-6 shadow-2xl rounded-3xl sm:px-12 border border-gray-700/50">
         <form class="space-y-6" @submit.prevent="handleLogin">
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Adresse Email
-            </label>
-            <div class="mt-1">
+            <label for="email" class="block text-sm font-bold text-gray-300">Adresse Email</label>
+            <div class="mt-2 relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" /></svg>
+              </div>
               <input 
                 id="email" 
-                name="email" 
+                v-model="email" 
                 type="email" 
-                autocomplete="email" 
                 required 
-                v-model="email"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                placeholder="admin@ecole.fr"
+                class="block w-full rounded-xl border-0 py-3.5 pl-11 bg-[#242931] text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm transition-all" 
+                placeholder="etudiant@ecole.fr"
               />
             </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">
-              Mot de passe
-            </label>
-            <div class="mt-1">
+            <label for="password" class="block text-sm font-bold text-gray-300">Mot de passe</label>
+            <div class="mt-2 relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </div>
               <input 
                 id="password" 
-                name="password" 
+                v-model="password" 
                 type="password" 
-                autocomplete="current-password" 
                 required 
-                v-model="password"
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
+                class="block w-full rounded-xl border-0 py-3.5 pl-11 bg-[#242931] text-white shadow-sm ring-1 ring-inset ring-gray-700 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm transition-all" 
                 placeholder="••••••••"
               />
             </div>
           </div>
 
-          <!-- Message d'erreur esthétique -->
-          <div v-if="errorMessage" class="rounded-md bg-red-50 p-4 border border-red-200">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <h3 class="text-sm font-medium text-red-800">
-                  {{ errorMessage }}
-                </h3>
-              </div>
-            </div>
+          <div v-if="errorMsg" class="text-sm font-bold text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-900/50 flex items-center">
+            <svg class="h-5 w-5 mr-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            {{ errorMsg }}
           </div>
 
           <div>
             <button 
               type="submit" 
               :disabled="isLoading"
-              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex w-full justify-center rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-3.5 text-sm font-bold text-white shadow-sm hover:from-blue-500 hover:to-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all disabled:opacity-50"
             >
-              <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span v-if="isLoading">Connexion en cours...</span>
-              <span v-else>Se connecter</span>
+              {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
             </button>
           </div>
         </form>
+
+        <div class="mt-8">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="bg-[#181D23] px-4 text-gray-500 font-medium">Nouveau futur élève ?</span>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <router-link to="/register" class="flex w-full justify-center rounded-xl border-2 border-gray-700 bg-transparent px-3 py-3 text-sm font-bold text-gray-300 hover:bg-gray-800 hover:text-white hover:border-gray-600 transition-all">
+              Créer un compte étudiant
+            </router-link>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -89,41 +97,32 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 
-const email = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const isLoading = ref(false);
-
 const router = useRouter();
 const authStore = useAuthStore();
 
-const handleLogin = async () => {
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.';
-    return;
-  }
+const email = ref('');
+const password = ref('');
+const isLoading = ref(false);
+const errorMsg = ref('');
 
-  isLoading.value = true;
-  errorMessage.value = '';
-  
-  try {
-    await authStore.login(email.value, password.value);
+const handleLogin = async () => {
+    isLoading.value = true;
+    errorMsg.value = '';
     
-    // Redirection selon le rôle
-    if (authStore.user && authStore.user.role === 'ROLE_ADMIN') {
-      router.push('/dashboard');
-    } else {
-      router.push('/student/dashboard');
+    try {
+        const success = await authStore.login(email.value, password.value);
+        if (success) {
+            // Routage en fonction du rôle géré dans l'index.js ou ici :
+            if (authStore.user?.role === 'ROLE_USER') {
+                router.push('/student/dashboard');
+            } else {
+                router.push('/dashboard');
+            }
+        }
+    } catch (error) {
+        errorMsg.value = error.response?.data?.message || 'Erreur de connexion';
+    } finally {
+        isLoading.value = false;
     }
-  } catch (error) {
-    console.error('Erreur de connexion:', error);
-    if (error.response && error.response.status === 401) {
-      errorMessage.value = "Email ou mot de passe incorrect.";
-    } else {
-      errorMessage.value = "Une erreur serveur est survenue. Veuillez réessayer plus tard.";
-    }
-  } finally {
-    isLoading.value = false;
-  }
 };
 </script>

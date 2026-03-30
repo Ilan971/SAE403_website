@@ -12,6 +12,11 @@ const router = createRouter({
       component: LoginView,
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+    },
+    {
       path: '/',
       component: AdminLayout,
       meta: { requiresAuth: true }, // Toutes les routes enfants sont protégées

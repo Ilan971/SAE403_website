@@ -70,75 +70,77 @@
     </div>
 
     <!-- Modal Form -->
-    <div v-if="showModal" class="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
-      <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-md">
-            
-            <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
-              <h3 class="text-lg font-bold text-white tracking-wide" id="modal-title">
-                {{ isEditing ? 'Modifier le compte' : 'Créer un compte' }}
-              </h3>
-              <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
-                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
+    <Teleport to="body">
+      <div v-if="showModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-md">
+              
+              <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white tracking-wide" id="modal-title">
+                  {{ isEditing ? 'Modifier le compte' : 'Créer un compte' }}
+                </h3>
+                <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              
+              <form @submit.prevent="submitForm">
+                <div class="px-6 py-6 space-y-5">
+                  
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                      <label for="prenom" class="block text-sm font-bold text-gray-300 mb-2">Prénom</label>
+                      <input type="text" id="prenom" v-model="formData.prenom" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                    </div>
+                    <div>
+                      <label for="nom" class="block text-sm font-bold text-gray-300 mb-2">Nom</label>
+                      <input type="text" id="nom" v-model="formData.nom" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="email" class="block text-sm font-bold text-gray-300 mb-2">Email</label>
+                    <input type="email" id="email" v-model="formData.email" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                  </div>
+
+                  <div>
+                    <label for="password" class="block text-sm font-bold text-gray-300 mb-2">
+                      Mot de passe <span class="text-xs text-gray-500 font-normal ml-1" v-if="isEditing">(ne rien mettre pour garder)</span>
+                    </label>
+                    <input type="password" id="password" v-model="formData.password" :required="!isEditing" class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                  </div>
+
+                  <div>
+                    <label for="role" class="block text-sm font-bold text-gray-300 mb-2">Rôle d'accès</label>
+                    <select id="role" v-model="formData.role" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
+                      <option value="ROLE_USER">Étudiant (Accès au portail étudiant)</option>
+                      <option value="ROLE_ADMIN">Administrateur / Professeur</option>
+                    </select>
+                  </div>
+
+                  <div v-if="formError" class="text-sm font-bold text-red-400 bg-red-900/20 p-3 rounded-lg border border-red-900/50">
+                    {{ formError }}
+                  </div>
+                </div>
+                <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
+                  <button type="submit" :disabled="isSaving" class="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-50">
+                    <span v-if="isSaving">Envoi...</span>
+                    <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer le compte' }}</span>
+                  </button>
+                  <button type="button" @click="closeModal" class="rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors border border-gray-600/50">
+                    Annuler
+                  </button>
+                </div>
+              </form>
             </div>
-            
-            <form @submit.prevent="submitForm">
-              <div class="px-6 py-6 space-y-5">
-                
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label for="prenom" class="block text-sm font-bold text-gray-300 mb-2">Prénom</label>
-                    <input type="text" id="prenom" v-model="formData.prenom" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                  </div>
-                  <div>
-                    <label for="nom" class="block text-sm font-bold text-gray-300 mb-2">Nom</label>
-                    <input type="text" id="nom" v-model="formData.nom" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                  </div>
-                </div>
-
-                <div>
-                  <label for="email" class="block text-sm font-bold text-gray-300 mb-2">Email</label>
-                  <input type="email" id="email" v-model="formData.email" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-
-                <div>
-                  <label for="password" class="block text-sm font-bold text-gray-300 mb-2">
-                    Mot de passe <span class="text-xs text-gray-500 font-normal ml-1" v-if="isEditing">(ne rien mettre pour garder)</span>
-                  </label>
-                  <input type="password" id="password" v-model="formData.password" :required="!isEditing" class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-600 px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                </div>
-
-                <div>
-                  <label for="role" class="block text-sm font-bold text-gray-300 mb-2">Rôle d'accès</label>
-                  <select id="role" v-model="formData.role" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
-                    <option value="ROLE_USER">Étudiant (Accès au portail étudiant)</option>
-                    <option value="ROLE_ADMIN">Administrateur / Professeur</option>
-                  </select>
-                </div>
-
-                <div v-if="formError" class="text-sm font-bold text-red-400 bg-red-900/20 p-3 rounded-lg border border-red-900/50">
-                  {{ formError }}
-                </div>
-              </div>
-              <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
-                <button type="submit" :disabled="isSaving" class="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-50">
-                  <span v-if="isSaving">Envoi...</span>
-                  <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer le compte' }}</span>
-                </button>
-                <button type="button" @click="closeModal" class="rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors border border-gray-600/50">
-                  Annuler
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 

@@ -139,121 +139,123 @@
     </div>
 
     <!-- Modal de Formulaire (Création / Modification) -->
-    <div v-if="showModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <!-- Fond sombre corrigé pour le thème -->
-      <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
+    <Teleport to="body">
+      <div v-if="showModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Fond sombre corrigé pour le thème -->
+        <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
 
-      <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-          <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-xl">
-            <!-- Header du modal -->
-            <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
-              <h3 class="text-lg font-bold leading-6 text-white" id="modal-title">
-                {{ isEditing ? 'Modifier la SAE' : 'Créer une nouvelle SAE' }}
-              </h3>
-              <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
-                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-            
-            <!-- Contenu (Formulaire) -->
-            <form @submit.prevent="submitForm">
-              <div class="px-6 pb-6 pt-6 space-y-5">
-                
-                <!-- Titre -->
-                <div>
-                  <label for="titre" class="block text-sm font-bold text-gray-300 mb-2">Titre de la SAE</label>
-                  <input type="text" id="titre" v-model="formData.titre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: SAE 4.03 - API RESTful">
-                </div>
-
-                <!-- Description -->
-                <div>
-                  <label for="description" class="block text-sm font-bold text-gray-300 mb-2">Description</label>
-                  <textarea id="description" v-model="formData.description" rows="3" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Bref résumé des attendus..."></textarea>
-                </div>
-
-                <!-- Grid pour Semestre & Année -->
-                <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all w-full sm:max-w-xl flex flex-col max-h-[calc(100vh-2rem)]">
+              <!-- Header du modal -->
+              <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center shrink-0">
+                <h3 class="text-lg font-bold leading-6 text-white" id="modal-title">
+                  {{ isEditing ? 'Modifier la SAE' : 'Créer une nouvelle SAE' }}
+                </h3>
+                <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+              
+              <!-- Contenu (Formulaire) -->
+              <form @submit.prevent="submitForm" class="flex flex-col overflow-hidden">
+                <div class="px-6 pb-6 pt-6 space-y-5 overflow-y-auto flex-1">
+                  
+                  <!-- Titre -->
                   <div>
-                    <label for="semestre" class="block text-sm font-bold text-gray-300 mb-2">Semestre</label>
-                    <div class="relative">
-                      <select id="semestre" v-model="formData.semestre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none pr-10">
-                        <option :value="1">Semestre 1</option>
-                        <option :value="2">Semestre 2</option>
-                        <option :value="3">Semestre 3</option>
-                        <option :value="4">Semestre 4</option>
-                        <option :value="5">Semestre 5</option>
-                        <option :value="6">Semestre 6</option>
-                      </select>
-                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    <label for="titre" class="block text-sm font-bold text-gray-300 mb-2">Titre de la SAE</label>
+                    <input type="text" id="titre" v-model="formData.titre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: SAE 4.03 - API RESTful">
+                  </div>
+
+                  <!-- Description -->
+                  <div>
+                    <label for="description" class="block text-sm font-bold text-gray-300 mb-2">Description</label>
+                    <textarea id="description" v-model="formData.description" rows="3" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Bref résumé des attendus..."></textarea>
+                  </div>
+
+                  <!-- Grid pour Semestre & Année -->
+                  <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
+                    <div>
+                      <label for="semestre" class="block text-sm font-bold text-gray-300 mb-2">Semestre</label>
+                      <div class="relative">
+                        <select id="semestre" v-model="formData.semestre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none pr-10">
+                          <option :value="1">Semestre 1</option>
+                          <option :value="2">Semestre 2</option>
+                          <option :value="3">Semestre 3</option>
+                          <option :value="4">Semestre 4</option>
+                          <option :value="5">Semestre 5</option>
+                          <option :value="6">Semestre 6</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <label for="annee" class="block text-sm font-bold text-gray-300 mb-2">Année universitaire</label>
-                    <input type="text" id="annee" v-model="formData.anneeUniversitaire" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: 2025-2026">
-                  </div>
-                </div>
-
-                <!-- Date Limite -->
-                <div>
-                  <label for="dateEcheance" class="block text-sm font-bold text-gray-300 mb-2">Date d'échéance</label>
-                  <input type="date" id="dateEcheance" v-model="formData.dateEcheance" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors [color-scheme:dark]">
-                </div>
-
-                <!-- Membres Assignés -->
-                <div>
-                  <label class="block text-sm font-medium leading-6 text-gray-900 mb-2">Membres assignés</label>
-                  <div v-if="isLoadingUsers" class="flex justify-center py-4">
-                    <svg class="animate-spin h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                  </div>
-                  <div v-else class="border border-gray-200 rounded-md overflow-hidden">
-                    <!-- Option Tout Sélectionner -->
-                    <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-200 flex items-center">
-                      <input id="select-all" type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
-                      <label for="select-all" class="ml-3 text-sm font-semibold text-gray-700 cursor-pointer">Tout sélectionner</label>
-                      <span class="ml-auto text-xs text-gray-400">{{ selectedUserIds.length }}/{{ allUsers.length }}</span>
+                    <div>
+                      <label for="annee" class="block text-sm font-bold text-gray-300 mb-2">Année universitaire</label>
+                      <input type="text" id="annee" v-model="formData.anneeUniversitaire" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: 2025-2026">
                     </div>
-                    <!-- Liste des utilisateurs -->
-                    <ul class="max-h-40 overflow-y-auto divide-y divide-gray-100">
-                      <li v-for="user in allUsers" :key="user.id" class="px-4 py-2.5 flex items-center hover:bg-gray-50">
-                        <input :id="'modal-user-' + user.id" v-model="selectedUserIds" :value="user.id" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer">
-                        <label :for="'modal-user-' + user.id" class="ml-3 flex flex-col cursor-pointer w-full">
-                          <span class="text-sm font-medium text-gray-900">{{ user.prenom }} {{ user.nom }}</span>
-                          <span class="text-xs text-gray-500">{{ user.email }} • {{ user.role === 'ROLE_ADMIN' ? 'Professeur' : 'Étudiant' }}</span>
-                        </label>
-                      </li>
-                    </ul>
                   </div>
-                </div>
-                
-                <!-- Feedback d'erreur d'enregistrement -->
-                <div v-if="formError" class="text-sm font-medium text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-xl mt-4 flex items-center">
-                  <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
-                  {{ formError }}
-                </div>
 
-              </div>
-              <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
-                <button type="submit" :disabled="isSaving" class="inline-flex justify-center rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all disabled:opacity-50 min-w-[120px]">
-                  <span v-if="isSaving">Patientez...</span>
-                  <span v-else>{{ isEditing ? 'Mettre à jour' : 'Sauvegarder' }}</span>
-                </button>
-                <button type="button" @click="closeModal" class="inline-flex justify-center rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 border border-gray-600/50 transition-all">
-                  Annuler
-                </button>
-              </div>
-            </form>
+                  <!-- Date Limite -->
+                  <div>
+                    <label for="dateEcheance" class="block text-sm font-bold text-gray-300 mb-2">Date d'échéance</label>
+                    <input type="date" id="dateEcheance" v-model="formData.dateEcheance" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors [color-scheme:dark]">
+                  </div>
+
+                  <!-- Membres Assignés -->
+                  <div>
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Membres assignés</label>
+                    <div v-if="isLoadingUsers" class="flex justify-center py-4">
+                      <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    </div>
+                    <div v-else class="border border-gray-700 rounded-xl overflow-hidden bg-[#1E232B]">
+                      <!-- Option Tout Sélectionner -->
+                      <div class="px-4 py-3 bg-[#2A313C]/50 border-b border-gray-700 flex items-center">
+                        <input id="select-all" type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="focus:ring-blue-500 h-4 w-4 bg-[#242931] text-blue-500 border-gray-600 rounded cursor-pointer">
+                        <label for="select-all" class="ml-3 text-sm font-bold text-gray-300 cursor-pointer">Tout sélectionner</label>
+                        <span class="ml-auto text-xs font-medium text-gray-500 bg-[#242931] px-2 py-0.5 rounded-md border border-gray-700">{{ selectedUserIds.length }}/{{ allUsers.length }}</span>
+                      </div>
+                      <!-- Liste des utilisateurs -->
+                      <ul class="max-h-40 overflow-y-auto divide-y divide-gray-700/50 hover:scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                        <li v-for="user in allUsers" :key="user.id" class="px-4 py-3 flex items-center hover:bg-[#2A313C]/50 transition-colors">
+                          <input :id="'modal-user-' + user.id" v-model="selectedUserIds" :value="user.id" type="checkbox" class="focus:ring-blue-500 h-4 w-4 bg-[#242931] text-blue-500 border-gray-600 rounded cursor-pointer">
+                          <label :for="'modal-user-' + user.id" class="ml-4 flex flex-col cursor-pointer w-full">
+                            <span class="text-sm font-bold text-gray-200">{{ user.prenom }} {{ user.nom }}</span>
+                            <span class="text-xs text-gray-500 mt-0.5">{{ user.email }} • <span :class="user.role === 'ROLE_ADMIN' ? 'text-[#7C5CFC]' : 'text-blue-400'">{{ user.role === 'ROLE_ADMIN' ? 'Professeur' : 'Étudiant' }}</span></span>
+                          </label>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <!-- Feedback d'erreur d'enregistrement -->
+                  <div v-if="formError" class="text-sm font-medium text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-xl mt-4 flex items-center">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                    {{ formError }}
+                  </div>
+
+                </div>
+                <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3 shrink-0">
+                  <button type="submit" :disabled="isSaving" class="inline-flex justify-center rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all disabled:opacity-50 min-w-[120px]">
+                    <span v-if="isSaving">Patientez...</span>
+                    <span v-else>{{ isEditing ? 'Mettre à jour' : 'Sauvegarder' }}</span>
+                  </button>
+                  <button type="button" @click="closeModal" class="inline-flex justify-center rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 border border-gray-600/50 transition-all">
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Teleport>
   </div>
 </template>
 
@@ -291,8 +293,6 @@ const formData = ref({
   dateEcheance: ''
 });
 
-<<<<<<< HEAD
-=======
 // --- Gestion des membres ---
 const allUsers = ref([]);
 const selectedUserIds = ref([]);
@@ -323,7 +323,6 @@ const loadUsers = async () => {
 };
 
 // Charger la liste
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
 const fetchSaes = async () => {
   try {
     const response = await api.get('/sae');
@@ -339,12 +338,6 @@ onMounted(() => {
   fetchSaes();
 });
 
-<<<<<<< HEAD
-const openCreateModal = () => {
-  isEditing.value = false;
-  editingId.value = null;
-  formError.value = '';
-=======
 // --- ACTIONS CRUD ---
 
 // OUVRIR CREATION
@@ -354,7 +347,6 @@ const openCreateModal = async () => {
   formError.value = '';
   selectedUserIds.value = [];
   // Reset fields
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   formData.value = { 
     titre: '', 
     description: '', 
@@ -366,12 +358,8 @@ const openCreateModal = async () => {
   await loadUsers();
 };
 
-<<<<<<< HEAD
-const openEditModal = (sae) => {
-=======
 // OUVRIR MODIFICATION
 const openEditModal = async (sae) => {
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   isEditing.value = true;
   editingId.value = sae.id;
   formError.value = '';
@@ -381,9 +369,6 @@ const openEditModal = async (sae) => {
     formattedDate = new Date(sae.dateEcheance).toISOString().split('T')[0];
   }
   
-<<<<<<< HEAD
-  formData.value = { ...sae, dateEcheance: formattedDate };
-=======
   // Cloner les données pour éviter de modifier la table directement avant save
   formData.value = { 
     ...sae, 
@@ -392,8 +377,7 @@ const openEditModal = async (sae) => {
   
   // Pré-cocher les membres déjà assignés
   selectedUserIds.value = sae.users ? sae.users.map(u => u.id) : [];
-  
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
+
   showModal.value = true;
   await loadUsers();
 };
@@ -411,13 +395,9 @@ const submitForm = async () => {
       titre: formData.value.titre,
       description: formData.value.description,
       semestre: Number(formData.value.semestre),
-<<<<<<< HEAD
-      dateEcheance: new Date(formData.value.dateEcheance).toISOString()
-=======
       anneeUniversitaire: formData.value.anneeUniversitaire,
       dateEcheance: new Date(formData.value.dateEcheance).toISOString(),
       userIds: selectedUserIds.value
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
     };
     
     if (isEditing.value) {
@@ -453,14 +433,11 @@ const deleteSae = async (id) => {
     toast.success('SAE supprimée avec succès.');
   } catch (error) {
     console.error('Erreur lors de la suppression:', error);
-<<<<<<< HEAD
-=======
     if (error.response && error.response.status === 403) {
       toast.error("Vous n'avez pas les droits d'administration.");
     } else {
       toast.error("Une erreur serveur est survenue lors de la suppression.");
     }
->>>>>>> 235f87efedd17ead5a0f867cb8591348916f00b0
   } finally {
     isProcessing.value = false;
   }
