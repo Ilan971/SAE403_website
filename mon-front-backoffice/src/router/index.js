@@ -26,6 +26,16 @@ const router = createRouter({
           component: () => import('../views/DashboardView.vue'),
         },
         {
+          path: 'documents',
+          name: 'documentList',
+          component: () => import('../views/DocumentsView.vue'),
+        },
+        {
+          path: 'profil',
+          name: 'profil',
+          component: () => import('../views/ProfilView.vue'),
+        },
+        {
           path: 'sae',
           name: 'saeList',
           component: () => import('../views/SaeListView.vue'),
@@ -46,6 +56,27 @@ const router = createRouter({
           component: () => import('../views/AnnonceListView.vue'),
         }
       ]
+    },
+    {
+      path: '/student',
+      component: () => import('../layouts/StudentLayout.vue'),
+      meta: { requiresAuth: true }, // Protégé et réservé aux étudiants (géré par le beforeEach)
+      children: [
+        {
+          path: '',
+          redirect: '/student/dashboard'
+        },
+        {
+          path: 'dashboard',
+          name: 'studentDashboard',
+          component: () => import('../views/StudentDashboardView.vue'),
+        },
+        {
+          path: 'sae/:status',
+          name: 'studentSaeList',
+          component: () => import('../views/StudentSaeListView.vue'),
+        }
+      ]
     }
   ]
 });
@@ -58,10 +89,19 @@ router.beforeEach((to, from) => {
     return '/login';
   }
   
-  if (to.meta.requiresAuth && authStore.user && authStore.user.role !== 'ROLE_ADMIN') {
-    authStore.logout();
-    alert("Accès refusé. Le backoffice est réservé aux administrateurs.");
-    return '/login';
+  if (to.meta.requiresAuth && authStore.user) {
+    const isAdmin = authStore.user.role === 'ROLE_ADMIN';
+    const isStudentRoute = to.path.startsWith('/student');
+    
+    // Redirection si un étudiant tente d'accéder au backoffice admin
+    if (!isAdmin && !isStudentRoute) {
+      return '/student/dashboard';
+    }
+    
+    // Redirection si admin tente d'accéder à l'espace étudiant (optionnel)
+    if (isAdmin && isStudentRoute) {
+       return '/dashboard';
+    }
   }
 });
 

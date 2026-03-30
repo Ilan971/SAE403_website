@@ -1,14 +1,16 @@
 <template>
-  <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex items-center hover:shadow-md transition-shadow">
-    <div v-if="$slots.icon || icon" class="flex-shrink-0 mr-4 h-12 w-12 rounded-full flex items-center justify-center bg-opacity-20" :class="colorClass">
+  <div class="bg-[#242931] p-5 rounded-2xl shadow-lg border border-gray-700/30 flex items-center justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 transition-all duration-300 group cursor-default">
+    <div class="flex flex-col h-full justify-between">
+      <h4 class="text-[13px] font-bold text-gray-400 truncate mb-1">{{ title }}</h4>
+      <p class="text-2xl font-extrabold text-white">{{ value }}</p>
+      <p class="text-[11px] text-gray-500 font-medium mt-1">{{ subtitle }}</p>
+    </div>
+    
+    <div class="flex-shrink-0 ml-3 h-[52px] w-[52px] rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner" :class="colorBoxClass">
       <slot name="icon">
         <!-- Default icon if none provided -->
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </slot>
-    </div>
-    <div>
-      <h4 class="text-sm font-medium text-gray-500 uppercase tracking-wider">{{ title }}</h4>
-      <p class="mt-1 text-3xl font-bold text-gray-900">{{ value }}</p>
     </div>
   </div>
 </template>
@@ -25,7 +27,7 @@ const props = defineProps({
     type: [Number, String],
     required: true
   },
-  icon: {
+  subtitle: {
     type: String,
     default: ''
   },
@@ -35,15 +37,16 @@ const props = defineProps({
   }
 });
 
-const colorClass = computed(() => {
+const colorBoxClass = computed(() => {
   const colors = {
-    indigo: 'bg-indigo-100 text-indigo-600',
-    green: 'bg-green-100 text-green-600',
-    blue: 'bg-blue-100 text-blue-600',
-    purple: 'bg-purple-100 text-purple-600',
-    orange: 'bg-orange-100 text-orange-600',
-    red: 'bg-red-100 text-red-600',
-    gray: 'bg-gray-100 text-gray-600'
+    indigo: 'bg-[#6366F1] text-white',
+    green: 'bg-[#10B981] text-white',
+    blue: 'bg-[#3B82F6] text-white',
+    purple: 'bg-[#8B5CF6] text-white',
+    orange: 'bg-[#EAB308] text-white', // using yellow-ish orange for the "A venir" look
+    pink: 'bg-[#EC4899] text-white',
+    red: 'bg-[#EF4444] text-white',
+    gray: 'bg-gray-600 text-white'
   };
   return colors[props.color] || colors.indigo;
 });

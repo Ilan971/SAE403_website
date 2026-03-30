@@ -2,13 +2,13 @@
   <div class="space-y-6 relative">
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
       <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Annonces & Messages</h2>
-        <p class="mt-2 text-sm text-gray-500">
+        <h2 class="text-3xl font-extrabold text-white tracking-wide">Annonces & Messages</h2>
+        <p class="mt-2 text-sm text-gray-400">
           Gérez toutes les annonces globales liées aux différents projets SAE.
         </p>
       </div>
       <div class="mt-4 sm:mt-0" v-if="isAdmin">
-        <button @click="openCreateModal" class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 transition-colors">
+        <button @click="openCreateModal" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 hover:-translate-y-0.5 transition-all">
           <svg class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
@@ -18,46 +18,52 @@
     </div>
     
     <!-- Table -->
-    <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
-      <div v-if="isLoading || isProcessing" class="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-         <span class="text-indigo-600 font-semibold animate-pulse">Chargement...</span>
+    <div class="bg-[#242931] border border-gray-700/50 shadow-xl sm:rounded-2xl overflow-hidden relative">
+      <div v-if="isLoading || isProcessing" class="absolute inset-0 bg-[#1E232B]/60 backdrop-blur-sm z-10 flex items-center justify-center">
+         <span class="text-blue-400 font-bold tracking-widest animate-pulse">CHARGEMENT...</span>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 uppercase tracking-wider">Date & Auteur</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Message</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Projet (SAE)</th>
-              <th v-if="isAdmin" scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 whitespace-nowrap text-right text-sm font-semibold uppercase tracking-wider text-gray-900">Actions</th>
+      <div class="overflow-x-auto pb-4">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-[#2A313C]/60">
+            <tr class="text-gray-400 text-xs tracking-wider">
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Date & Auteur</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Message</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Projet (SAE)</th>
+              <th v-if="isAdmin" scope="col" class="py-5 px-8 font-bold uppercase text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="annonce in annonces" :key="annonce.id" class="hover:bg-gray-50 transition-colors">
-              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                <div class="font-medium text-gray-900">{{ new Date(annonce.datePublication).toLocaleDateString('fr-FR') }}</div>
-                <div class="text-gray-500 text-xs mt-1 bg-gray-100 px-2 py-0.5 rounded inline-block">
+          <tbody class="divide-y divide-gray-700/30 text-[13px]">
+            <tr v-for="annonce in annonces" :key="annonce.id" class="hover:bg-[#2A313C]/40 transition-colors group">
+              <td class="py-5 px-8 border-l-4 border-transparent group-hover:border-blue-500 transition-colors">
+                <div class="font-bold text-gray-200">{{ new Date(annonce.datePublication).toLocaleDateString('fr-FR') }}</div>
+                <div class="text-gray-400 font-medium text-xs mt-1.5 bg-gray-700/50 px-2 py-0.5 rounded w-max">
                   Par {{ annonce.user ? annonce.user.prenom + ' ' + annonce.user.nom : 'Auteur inconnu' }}
                 </div>
               </td>
-              <td class="px-3 py-4 text-sm text-gray-900 max-w-sm">
-                <div class="font-bold mb-1 text-indigo-900">{{ annonce.titre }}</div>
-                <div class="text-gray-600 truncate" :title="annonce.contenu">{{ annonce.contenu }}</div>
+              <td class="py-5 px-8 text-gray-400 max-w-sm">
+                <div class="font-bold mb-1 text-blue-400 text-[14px]">{{ annonce.titre }}</div>
+                <div class="text-gray-400 truncate tracking-wide" :title="annonce.contenu">{{ annonce.contenu }}</div>
               </td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm font-medium">
-                <router-link v-if="annonce.sae" :to="'/sae/' + annonce.saeId" class="text-indigo-600 hover:text-indigo-800 hover:underline">
+              <td class="py-5 px-8 font-medium">
+                <router-link v-if="annonce.sae" :to="'/sae/' + annonce.saeId" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold leading-none bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-colors">
                   {{ annonce.sae.titre }}
                 </router-link>
-                <span v-else class="text-gray-400 italic">SAE supprimée</span>
+                <span v-else class="text-gray-500 italic bg-gray-800/50 px-3 py-1 rounded-full text-xs border border-gray-700/50">SAE supprimée</span>
               </td>
-              <td v-if="isAdmin" class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                <button @click="openEditModal(annonce)" class="text-indigo-600 hover:text-indigo-900 mr-4 transition-colors">Modifier</button>
-                <button @click="deleteAnnonce(annonce.id)" class="text-red-600 hover:text-red-900 transition-colors">Supprimer</button>
+              <td v-if="isAdmin" class="py-5 px-8 text-right font-bold space-x-5">
+                <button @click="openEditModal(annonce)" class="text-gray-400 hover:text-white transition-colors">Modifier</button>
+                <button @click="deleteAnnonce(annonce.id)" class="text-red-500 hover:text-red-400 transition-colors">Supprimer</button>
               </td>
             </tr>
             <tr v-if="!isLoading && annonces.length === 0">
-              <td :colspan="isAdmin ? 4 : 3" class="px-6 py-12 text-center text-sm text-gray-500">
-                La boîte de réception de la plateforme est bien vide. Aucune annonce n'a été publiée.
+              <td :colspan="isAdmin ? 4 : 3" class="px-6 py-16 text-center">
+                <div class="bg-blue-900/20 p-4 rounded-full mb-4 inline-block">
+                  <svg class="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                  </svg>
+                </div>
+                <p class="text-[15px] font-bold text-gray-300">Boîte de réception vide</p>
+                <p class="text-sm text-gray-500 mt-1">Aucune annonce n'a été publiée.</p>
               </td>
             </tr>
           </tbody>
@@ -66,17 +72,17 @@
     </div>
 
     <!-- Modal Form -->
-    <div v-if="showModal" class="relative z-20" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
+    <div v-if="showModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
       <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-xl">
             
-            <div class="bg-gray-50 px-4 py-4 sm:px-6 border-b border-gray-100 flex justify-between items-center">
-              <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">
+            <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
+              <h3 class="text-lg font-bold leading-6 text-white" id="modal-title">
                 {{ isEditing ? 'Modifier le message' : 'Rédiger une annonce' }}
               </h3>
-              <button @click="closeModal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+              <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -84,36 +90,42 @@
             </div>
             
             <form @submit.prevent="submitForm">
-              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 space-y-5">
+              <div class="px-6 pb-6 pt-6 space-y-5">
                 
                 <div>
-                  <label for="titre" class="block text-sm font-medium leading-6 text-gray-900">Sujet de l'annonce</label>
-                  <input type="text" id="titre" v-model="formData.titre" required class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
+                  <label for="titre" class="block text-sm font-bold text-gray-300 mb-2">Sujet de l'annonce</label>
+                  <input type="text" id="titre" v-model="formData.titre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Titre clair et concis...">
                 </div>
 
                 <div>
-                  <label for="saeId" class="block text-sm font-medium leading-6 text-gray-900">Projet SAE rattaché</label>
-                  <select id="saeId" v-model="formData.saeId" required class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
-                    <option value="" disabled>Sélectionnez un projet ciblé par l'annonce</option>
-                    <option v-for="s in saesList" :key="s.id" :value="s.id">[{{ s.anneeUniversitaire }} - Semestre {{s.semestre}}] {{ s.titre }}</option>
-                  </select>
+                  <label for="saeId" class="block text-sm font-bold text-gray-300 mb-2">Projet SAE rattaché</label>
+                  <div class="relative">
+                    <select id="saeId" v-model="formData.saeId" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-gray-200 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none pr-10">
+                      <option value="" disabled class="text-gray-500">Sélectionnez un projet ciblé par l'annonce</option>
+                      <option v-for="s in saesList" :key="s.id" :value="s.id" class="text-white">[{{ s.anneeUniversitaire }} - Semestre {{s.semestre}}] {{ s.titre }}</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                  <label for="contenu" class="block text-sm font-medium leading-6 text-gray-900">Message / Contenu</label>
-                  <textarea id="contenu" v-model="formData.contenu" rows="6" required class="mt-2 block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm" placeholder="Rédigez votre message à l'attention des étudiants ici..."></textarea>
+                  <label for="contenu" class="block text-sm font-bold text-gray-300 mb-2">Message / Contenu</label>
+                  <textarea id="contenu" v-model="formData.contenu" rows="6" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Rédigez votre message à l'attention des étudiants ici..."></textarea>
                 </div>
 
-                <div v-if="formError" class="text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-100">
+                <div v-if="formError" class="text-sm font-medium text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-xl mt-4 flex items-center">
+                  <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
                   {{ formError }}
                 </div>
               </div>
-              <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                <button type="submit" :disabled="isSaving" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto transition-colors disabled:opacity-50">
-                  <span v-if="isSaving">Envoi en cours...</span>
+              <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
+                <button type="submit" :disabled="isSaving" class="inline-flex justify-center rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all disabled:opacity-50 min-w-[120px]">
+                  <span v-if="isSaving">Envoi...</span>
                   <span v-else>{{ isEditing ? 'Mettre à jour' : 'Publier l\'annonce' }}</span>
                 </button>
-                <button type="button" @click="closeModal" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-colors">
+                <button type="button" @click="closeModal" class="inline-flex justify-center rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 border border-gray-600/50 transition-all">
                   Annuler
                 </button>
               </div>
@@ -156,11 +168,9 @@ const loadData = async () => {
       api.get('/annonces'),
       api.get('/sae')
     ]);
-    // Normalisation possible selon l'API (data ou data.data)
     annonces.value = resAnnonces.data.data || resAnnonces.data || [];
     saesList.value = resSaes.data.data || resSaes.data || [];
     
-    // Tri décroissant pour avoir les annonces les plus récentes en haut
     annonces.value.sort((a,b) => new Date(b.datePublication) - new Date(a.datePublication));
   } catch (error) {
     console.error('Erreur API Annonces:', error);

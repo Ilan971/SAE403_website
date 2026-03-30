@@ -109,15 +109,12 @@ const handleLogin = async () => {
   try {
     await authStore.login(email.value, password.value);
     
-    // Vérification ROLE_ADMIN
-    if (authStore.user && authStore.user.role !== 'ROLE_ADMIN') {
-      authStore.logout();
-      errorMessage.value = "Accès refusé. Seuls les administrateurs peuvent accéder au backoffice.";
-      return;
+    // Redirection selon le rôle
+    if (authStore.user && authStore.user.role === 'ROLE_ADMIN') {
+      router.push('/dashboard');
+    } else {
+      router.push('/student/dashboard');
     }
-
-    // Redirection vers le dashboard en cas de succès
-    router.push('/dashboard');
   } catch (error) {
     console.error('Erreur de connexion:', error);
     if (error.response && error.response.status === 401) {

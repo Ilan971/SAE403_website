@@ -3,8 +3,8 @@
     <!-- Header principal avec Titre et Bouton "Nouvelle SAE" -->
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
       <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Liste des SAE</h2>
-        <p class="mt-2 text-sm text-gray-500">
+        <h2 class="text-3xl font-extrabold text-white tracking-wide">Liste des SAE</h2>
+        <p class="mt-2 text-sm text-gray-400">
           Consultez et gérez l'ensemble des projets SAE supervisés.
         </p>
       </div>
@@ -12,7 +12,7 @@
         <button 
           @click="openCreateModal"
           type="button" 
-          class="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+          class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 hover:-translate-y-0.5 transition-all"
         >
           <svg class="h-5 w-5 mr-2 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -24,113 +24,113 @@
     
     <!-- Filtres et Recherche -->
     <div class="flex flex-col sm:flex-row gap-4 mb-6" v-if="!isLoading && saes.length > 0">
-      <div class="flex-1">
-        <label for="search" class="sr-only">Rechercher</label>
-        <div class="relative rounded-md shadow-sm">
-          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <input type="text" id="search" v-model="searchQuery" class="block w-full rounded-md border-0 py-2.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Rechercher une SAE par titre...">
+      <div class="flex-1 border border-gray-700/50 rounded-xl overflow-hidden bg-[#242931] flex items-center shadow-sm">
+        <div class="pl-4 pr-2">
+          <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+          </svg>
         </div>
+        <input type="text" id="search" v-model="searchQuery" class="block w-full bg-transparent border-0 py-3 text-gray-200 placeholder:text-gray-500 focus:ring-0 sm:text-sm" placeholder="Rechercher une SAE par titre...">
       </div>
-      <div class="sm:w-64">
-        <label for="semester-filter" class="sr-only">Filtrer par semestre</label>
-        <select id="semester-filter" v-model="selectedSemester" class="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-          <option value="">Tous les semestres</option>
-          <option value="1">Semestre 1</option>
-          <option value="2">Semestre 2</option>
-          <option value="3">Semestre 3</option>
-          <option value="4">Semestre 4</option>
-          <option value="5">Semestre 5</option>
-          <option value="6">Semestre 6</option>
+      <div class="sm:w-64 border border-gray-700/50 rounded-xl overflow-hidden bg-[#242931] shadow-sm">
+        <select id="semester-filter" v-model="selectedSemester" class="block w-full h-full bg-transparent border-0 py-3 pl-4 pr-10 text-gray-300 focus:ring-0 sm:text-sm appearance-none outline-none">
+          <option value="" class="bg-[#242931]">Tous les semestres</option>
+          <option value="1" class="bg-[#242931]">Semestre 1</option>
+          <option value="2" class="bg-[#242931]">Semestre 2</option>
+          <option value="3" class="bg-[#242931]">Semestre 3</option>
+          <option value="4" class="bg-[#242931]">Semestre 4</option>
+          <option value="5" class="bg-[#242931]">Semestre 5</option>
+          <option value="6" class="bg-[#242931]">Semestre 6</option>
         </select>
       </div>
     </div>
 
     <!-- Skeleton Loader (Pendant chargement Axios) -->
-    <div v-if="isLoading" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden p-6 animate-pulse">
-      <div class="h-6 bg-gray-200 rounded w-1/4 mb-8"></div>
-      <div class="space-y-4">
-        <div class="h-12 bg-gray-50 rounded w-full border border-gray-100"></div>
-        <div class="h-12 bg-gray-50 rounded w-full border border-gray-100"></div>
-        <div class="h-12 bg-gray-50 rounded w-full border border-gray-100"></div>
-        <div class="h-12 bg-gray-50 rounded w-full border border-gray-100"></div>
+    <div v-if="isLoading" class="bg-[#242931] border border-gray-700/50 shadow-xl rounded-2xl p-8 animate-pulse">
+      <div class="h-6 bg-[#374151] rounded w-1/4 mb-10"></div>
+      <div class="space-y-6">
+        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
+        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
+        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
+        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
       </div>
     </div>
 
     <!-- Empty State (Si aucune SAE en BDD) -->
-    <div v-else-if="saes.length === 0" class="bg-white px-6 py-16 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl flex flex-col items-center justify-center text-center">
-      <div class="bg-gray-50 p-4 rounded-full mb-4">
-        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <div v-else-if="saes.length === 0" class="bg-[#242931] px-6 py-20 shadow-xl border border-gray-700/50 rounded-2xl flex flex-col items-center justify-center text-center">
+      <div class="bg-[#2A313C] p-5 rounded-full mb-6">
+        <svg class="w-12 h-12 text-blue-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
         </svg>
       </div>
-      <h3 class="text-lg font-medium text-gray-900">Aucune SAE trouvée</h3>
-      <p class="text-sm text-gray-500 mt-2 max-w-sm">
-        Il n'y a pour l'instant aucun projet SAE enregistré dans la base de données. Commencez par en créer un !
+      <h3 class="text-xl font-bold text-white">Aucune SAE trouvée</h3>
+      <p class="text-[15px] text-gray-400 mt-3 max-w-md leading-relaxed">
+        Il n'y a pour l'instant aucun projet SAE enregistré dans la base de données. Cliquez sur "Nouvelle SAE" pour commencer !
       </p>
     </div>
 
     <!-- Empty State (Recherche infructueuse) -->
-    <div v-else-if="filteredSaes.length === 0" class="bg-white px-6 py-12 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl flex flex-col items-center justify-center text-center">
-      <div class="bg-indigo-50 p-3 rounded-full mb-3">
-        <svg class="w-8 h-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div v-else-if="filteredSaes.length === 0" class="bg-[#242931] px-6 py-16 shadow-xl border border-gray-700/50 rounded-2xl flex flex-col items-center justify-center text-center">
+      <div class="bg-blue-900/20 p-4 rounded-full mb-4">
+        <svg class="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
-      <h3 class="text-base font-medium text-gray-900">Aucun résultat pour cette recherche</h3>
-      <p class="text-sm text-gray-500 mt-1">
+      <h3 class="text-lg font-bold text-white">Aucun résultat pour cette recherche</h3>
+      <p class="text-[14px] text-gray-400 mt-2">
         Essayez de modifier vos termes de recherche ou de changer le filtre de semestre.
       </p>
-      <button @click="searchQuery = ''; selectedSemester = ''" class="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+      <button @click="searchQuery = ''; selectedSemester = ''" class="mt-6 text-sm font-bold text-blue-500 hover:text-blue-400 bg-blue-500/10 px-4 py-2 rounded-lg transition-colors">
         Réinitialiser les filtres
       </button>
     </div>
 
     <!-- Tableau moderne (Affichage des SAE) -->
-    <div v-else class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
-      <div v-if="isProcessing" class="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
-         <span class="text-indigo-600 font-semibold animate-pulse">Chargement...</span>
+    <div v-else class="bg-[#242931] border border-gray-700/50 shadow-xl rounded-2xl overflow-hidden relative">
+      <div v-if="isProcessing" class="absolute inset-0 bg-[#1E232B]/60 backdrop-blur-sm z-10 flex items-center justify-center">
+         <span class="text-blue-400 font-bold tracking-widest animate-pulse">CHARGEMENT...</span>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 uppercase tracking-wider">Titre</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Description</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Semestre</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Année</th>
-              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Date Limite</th>
-              <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 whitespace-nowrap text-right text-sm font-semibold uppercase tracking-wider text-gray-900">Actions</th>
+      <div class="overflow-x-auto pb-4">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-[#2A313C]/60">
+            <tr class="text-gray-400 text-xs tracking-wider">
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Titre</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Description</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Semestre</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Année</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase">Date Limite</th>
+              <th scope="col" class="py-5 px-8 font-bold uppercase text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-gray-50 transition-colors duration-150">
-              <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                <router-link :to="`/sae/${sae.id}`" class="hover:text-indigo-600 hover:underline transition-colors cursor-pointer">
+          <tbody class="divide-y divide-gray-700/30 text-[13px]">
+            <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-[#2A313C]/40 transition-colors group">
+              <td class="py-5 px-8 font-bold text-gray-200">
+                <router-link :to="`/sae/${sae.id}`" class="group-hover:text-blue-400 transition-colors cursor-pointer block">
                   {{ sae.titre }}
                 </router-link>
               </td>
-              <td class="px-3 py-4 text-sm text-gray-500 max-w-xs truncate" :title="sae.description">
+              <td class="py-5 px-8 text-gray-400 max-w-xs truncate" :title="sae.description">
                 {{ sae.description }}
               </td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+              <td class="py-5 px-8">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold leading-none bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   Semestre {{ sae.semestre }}
                 </span>
               </td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              <td class="py-5 px-8 text-gray-400 font-medium">
                 {{ sae.anneeUniversitaire }}
               </td>
-              <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                {{ sae.dateEcheance ? new Date(sae.dateEcheance).toLocaleDateString('fr-FR') : 'Non définie' }}
+              <td class="py-5 px-8 text-gray-400 font-medium whitespace-nowrap">
+                <span v-if="sae.dateEcheance" class="flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  {{ new Date(sae.dateEcheance).toLocaleDateString('fr-FR') }}
+                </span>
+                <span v-else class="text-gray-500 italic">Non définie</span>
               </td>
-              <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                <router-link :to="`/sae/${sae.id}`" class="text-blue-600 hover:text-blue-900 transition-colors focus:outline-none mr-4 font-bold cursor-pointer">Détails</router-link>
-                <button @click="openEditModal(sae)" class="text-indigo-600 hover:text-indigo-900 transition-colors focus:outline-none">Modifier</button>
-                <button @click="deleteSae(sae.id)" class="text-red-600 hover:text-red-900 ml-4 transition-colors focus:outline-none">Supprimer</button>
+              <td class="py-5 px-8 text-right font-bold space-x-5">
+                <router-link :to="`/sae/${sae.id}`" class="text-blue-500 hover:text-blue-400 transition-colors cursor-pointer">Détails</router-link>
+                <button @click="openEditModal(sae)" class="text-gray-400 hover:text-white transition-colors">Modifier</button>
+                <button @click="deleteSae(sae.id)" class="text-red-500 hover:text-red-400 transition-colors">Supprimer</button>
               </td>
             </tr>
           </tbody>
@@ -139,19 +139,19 @@
     </div>
 
     <!-- Modal de Formulaire (Création / Modification) -->
-    <div v-if="showModal" class="relative z-20" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <!-- Fond sombre -->
-      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm"></div>
+    <div v-if="showModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <!-- Fond sombre corrigé pour le thème -->
+      <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
 
       <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl">
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+          <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-xl">
             <!-- Header du modal -->
-            <div class="bg-gray-50 px-4 py-4 sm:px-6 border-b border-gray-100 flex justify-between items-center">
-              <h3 class="text-lg font-semibold leading-6 text-gray-900" id="modal-title">
+            <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
+              <h3 class="text-lg font-bold leading-6 text-white" id="modal-title">
                 {{ isEditing ? 'Modifier la SAE' : 'Créer une nouvelle SAE' }}
               </h3>
-              <button @click="closeModal" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+              <button @click="closeModal" class="text-gray-400 hover:text-white bg-[#1C2128] hover:bg-gray-700/50 rounded-lg p-1.5 transition-colors focus:outline-none">
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
@@ -160,30 +160,26 @@
             
             <!-- Contenu (Formulaire) -->
             <form @submit.prevent="submitForm">
-              <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 space-y-4">
+              <div class="px-6 pb-6 pt-6 space-y-5">
                 
                 <!-- Titre -->
                 <div>
-                  <label for="titre" class="block text-sm font-medium leading-6 text-gray-900">Titre de la SAE</label>
-                  <div class="mt-2">
-                    <input type="text" id="titre" v-model="formData.titre" required class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="ex: Portfolio MMI">
-                  </div>
+                  <label for="titre" class="block text-sm font-bold text-gray-300 mb-2">Titre de la SAE</label>
+                  <input type="text" id="titre" v-model="formData.titre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: SAE 4.03 - API RESTful">
                 </div>
 
                 <!-- Description -->
                 <div>
-                  <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
-                  <div class="mt-2">
-                    <textarea id="description" v-model="formData.description" rows="3" required class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Bref résumé des attendus..."></textarea>
-                  </div>
+                  <label for="description" class="block text-sm font-bold text-gray-300 mb-2">Description</label>
+                  <textarea id="description" v-model="formData.description" rows="3" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Bref résumé des attendus..."></textarea>
                 </div>
 
                 <!-- Grid pour Semestre & Année -->
-                <div class="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
                   <div>
-                    <label for="semestre" class="block text-sm font-medium leading-6 text-gray-900">Semestre</label>
-                    <div class="mt-2">
-                      <select id="semestre" v-model="formData.semestre" required class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <label for="semestre" class="block text-sm font-bold text-gray-300 mb-2">Semestre</label>
+                    <div class="relative">
+                      <select id="semestre" v-model="formData.semestre" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors appearance-none pr-10">
                         <option :value="1">Semestre 1</option>
                         <option :value="2">Semestre 2</option>
                         <option :value="3">Semestre 3</option>
@@ -191,36 +187,36 @@
                         <option :value="5">Semestre 5</option>
                         <option :value="6">Semestre 6</option>
                       </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                      </div>
                     </div>
                   </div>
                   <div>
-                    <label for="annee" class="block text-sm font-medium leading-6 text-gray-900">Année universitaire</label>
-                    <div class="mt-2">
-                      <input type="text" id="annee" v-model="formData.anneeUniversitaire" required class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="ex: 2024-2025">
-                    </div>
+                    <label for="annee" class="block text-sm font-bold text-gray-300 mb-2">Année universitaire</label>
+                    <input type="text" id="annee" v-model="formData.anneeUniversitaire" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white placeholder-gray-500 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="ex: 2025-2026">
                   </div>
                 </div>
 
                 <!-- Date Limite -->
                 <div>
-                  <label for="dateEcheance" class="block text-sm font-medium leading-6 text-gray-900">Date d'échéance (limite de dépôt)</label>
-                  <div class="mt-2">
-                    <input type="date" id="dateEcheance" v-model="formData.dateEcheance" required class="block w-full rounded-md border-0 py-2 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                  </div>
+                  <label for="dateEcheance" class="block text-sm font-bold text-gray-300 mb-2">Date d'échéance</label>
+                  <input type="date" id="dateEcheance" v-model="formData.dateEcheance" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors [color-scheme:dark]">
                 </div>
                 
                 <!-- Feedback d'erreur d'enregistrement -->
-                <div v-if="formError" class="text-sm text-red-600 bg-red-50 p-3 rounded-md border border-red-100 mt-2">
+                <div v-if="formError" class="text-sm font-medium text-red-400 bg-red-900/20 border border-red-500/30 p-4 rounded-xl mt-4 flex items-center">
+                  <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
                   {{ formError }}
                 </div>
 
               </div>
-              <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                <button type="submit" :disabled="isSaving" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto transition-colors disabled:opacity-50">
-                  <span v-if="isSaving">Enregistrement...</span>
-                  <span v-else>{{ isEditing ? 'Sauvegarder' : 'Créer' }}</span>
+              <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
+                <button type="submit" :disabled="isSaving" class="inline-flex justify-center rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition-all disabled:opacity-50 min-w-[120px]">
+                  <span v-if="isSaving">Patientez...</span>
+                  <span v-else>{{ isEditing ? 'Mettre à jour' : 'Sauvegarder' }}</span>
                 </button>
-                <button type="button" @click="closeModal" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-colors">
+                <button type="button" @click="closeModal" class="inline-flex justify-center rounded-xl bg-[#1C2128] px-6 py-2.5 text-sm font-bold text-gray-300 hover:text-white hover:bg-gray-700/50 border border-gray-600/50 transition-all">
                   Annuler
                 </button>
               </div>
@@ -238,26 +234,19 @@ import api from '../services/api';
 
 const saes = ref([]);
 const isLoading = ref(true);
-const isProcessing = ref(false); // overlay pendant suppression/maj
+const isProcessing = ref(false);
 
-// --- Filtres et Recherche ---
 const searchQuery = ref('');
 const selectedSemester = ref('');
 
-// --- Filtrage Réactif ---
 const filteredSaes = computed(() => {
   return saes.value.filter(sae => {
-    // Filtrer par titre (insensible à la casse)
     const matchQuery = sae.titre.toLowerCase().includes(searchQuery.value.trim().toLowerCase());
-    
-    // Filtrer par semestre
     const matchSemester = selectedSemester.value === '' || String(sae.semestre) === String(selectedSemester.value);
-    
     return matchQuery && matchSemester;
   });
 });
 
-// Gestion du modal
 const showModal = ref(false);
 const isEditing = ref(false);
 const isSaving = ref(false);
@@ -272,7 +261,6 @@ const formData = ref({
   dateEcheance: ''
 });
 
-// Charger la liste
 const fetchSaes = async () => {
   try {
     const response = await api.get('/sae');
@@ -288,14 +276,10 @@ onMounted(() => {
   fetchSaes();
 });
 
-// --- ACTIONS CRUD ---
-
-// OUVRIR CREATION
 const openCreateModal = () => {
   isEditing.value = false;
   editingId.value = null;
   formError.value = '';
-  // Reset fields
   formData.value = { 
     titre: '', 
     description: '', 
@@ -306,47 +290,34 @@ const openCreateModal = () => {
   showModal.value = true;
 };
 
-// OUVRIR MODIFICATION
 const openEditModal = (sae) => {
   isEditing.value = true;
   editingId.value = sae.id;
   formError.value = '';
   
-  // Convertir la date pour l'input type="date" (YYYY-MM-DD)
   let formattedDate = '';
   if (sae.dateEcheance) {
     formattedDate = new Date(sae.dateEcheance).toISOString().split('T')[0];
   }
   
-  // Cloner les données pour éviter de modifier la table directement avant save
-  formData.value = { 
-    ...sae, 
-    dateEcheance: formattedDate 
-  };
-  
+  formData.value = { ...sae, dateEcheance: formattedDate };
   showModal.value = true;
 };
 
-// FERMER MODAL
 const closeModal = () => {
   showModal.value = false;
 };
 
-// SOUMETTRE CREATE/UPDATE
 const submitForm = async () => {
   isSaving.value = true;
   formError.value = '';
   
   try {
-    // Préparer le payload avec les types corrects attendus par Prisma
     const payload = {
       ...formData.value,
       semestre: Number(formData.value.semestre),
-      // Mettre la string 'YYYY-MM-DD' en format Date complet pour Prisma
       dateEcheance: new Date(formData.value.dateEcheance).toISOString()
     };
-    
-    // Le middleware isAdmin exige d'être ADMIN.
     
     if (isEditing.value) {
       await api.put(`/sae/${editingId.value}`, payload);
@@ -355,7 +326,6 @@ const submitForm = async () => {
     }
     
     closeModal();
-    // Rafraichir le tableau silencieusement (avec Overlay)
     isProcessing.value = true;
     await fetchSaes();
   } catch (error) {
@@ -371,23 +341,14 @@ const submitForm = async () => {
   }
 };
 
-// SUPPRIMER
 const deleteSae = async (id) => {
-  if (!confirm("Voulez-vous vraiment supprimer définitivement cette SAE et toutes les ressources associées ?")) {
-    return;
-  }
-  
+  if (!confirm("Voulez-vous vraiment supprimer définitivement cette SAE ?")) return;
   isProcessing.value = true;
   try {
     await api.delete(`/sae/${id}`);
     saes.value = saes.value.filter(s => s.id !== id);
   } catch (error) {
     console.error('Erreur lors de la suppression:', error);
-    if (error.response && error.response.status === 403) {
-      alert("Erreur: Vous n'avez pas les droits d'administration.");
-    } else {
-      alert("Une erreur serveur est survenue lors de la suppression.");
-    }
   } finally {
     isProcessing.value = false;
   }

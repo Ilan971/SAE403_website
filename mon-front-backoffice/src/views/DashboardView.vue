@@ -1,136 +1,191 @@
 <template>
-  <div class="space-y-8">
-    <!-- Header -->
-    <div class="mb-4">
-      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Tableau de bord</h2>
-      <p class="mt-2 text-sm text-gray-500">
-        Bienvenue {{ authStore.user?.prenom }} {{ authStore.user?.nom }} ! Voici le résumé de vos projets SAE.
-      </p>
+  <div class="space-y-6">
+    <!-- Header & Filtres -->
+    <div class="sm:flex sm:items-center sm:justify-between mb-8">
+      <div>
+        <h2 class="text-[28px] font-bold text-white tracking-wide">Tableau de bord Enseignant</h2>
+        <p class="mt-2 text-sm text-gray-400">
+          Supervision globale, avancement des SAE et suivi des corrections.
+        </p>
+      </div>
+      
+      <div class="mt-4 sm:mt-0 flex flex-wrap gap-3">
+        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+          <option value="">Tous les semestres</option>
+          <option value="1">Semestre 1</option>
+          <option value="2">Semestre 2</option>
+          <option value="3">Semestre 3</option>
+          <option value="4">Semestre 4</option>
+        </select>
+        
+        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+          <option value="">Tous les groupes</option>
+          <option value="A">Groupe A</option>
+          <option value="B">Groupe B</option>
+          <option value="C">Groupe C</option>
+        </select>
+        
+        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+          <option value="">Tous les états</option>
+          <option value="en_cours">En cours</option>
+          <option value="a_corriger">À corriger</option>
+          <option value="cloture">Clôturé</option>
+        </select>
+      </div>
     </div>
 
     <!-- Skeletons (Chargement) -->
-    <div v-if="isLoading" class="space-y-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div v-for="i in 3" :key="i" class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 animate-pulse flex items-center">
-          <div class="h-12 w-12 bg-gray-200 rounded-full mr-4"></div>
-          <div>
-            <div class="h-4 bg-gray-200 rounded w-24 mb-2"></div>
-            <div class="h-8 bg-gray-200 rounded w-16"></div>
-          </div>
-        </div>
+    <div v-if="isLoading" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div v-for="i in 4" :key="i" class="bg-[#242931] h-[100px] rounded-2xl animate-pulse"></div>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 animate-pulse">
-        <div class="h-6 bg-gray-200 rounded w-48 mb-6"></div>
-        <div class="space-y-4">
-          <div class="h-10 bg-gray-100 rounded w-full"></div>
-          <div class="h-10 bg-gray-100 rounded w-full"></div>
-        </div>
-      </div>
+      <div class="bg-[#242931] h-[300px] rounded-3xl animate-pulse"></div>
     </div>
 
     <!-- Contenu Principal -->
     <div v-else class="space-y-8">
-      <!-- KPIs / StatCards -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Stats Row : KPI Enseignant -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          title="Total des SAE" 
-          :value="totalSae" 
+          title="SAE Supervisées" 
+          :value="saes.length || '0'" 
+          subtitle="Au total sur ce portail"
           color="blue"
         >
           <template #icon>
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
           </template>
         </StatCard>
-
+        
         <StatCard 
-          title="SAE en cours" 
-          :value="saeEnCoursCount" 
-          color="green"
+          title="Groupes d'étudiants" 
+          value="12" 
+          subtitle="Répartis sur vos cours"
+          color="purple"
         >
           <template #icon>
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
           </template>
         </StatCard>
 
         <StatCard 
-          title="Dates clés à venir" 
-          :value="prochainesSae.length" 
+          title="Dépôts en attente" 
+          value="8" 
+          subtitle="Rendus à évaluer"
           color="orange"
         >
           <template #icon>
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+             <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
+          </template>
+        </StatCard>
+
+        <StatCard 
+          title="Taux de complétion" 
+          value="68%" 
+          subtitle="Avancement global moyen"
+          color="green"
+        >
+          <template #icon>
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
           </template>
         </StatCard>
       </div>
 
-      <!-- Prochaines Échéances -->
-      <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden">
-        <div class="px-4 py-5 sm:px-6 border-b border-gray-100 flex items-center justify-between bg-gray-50">
-          <h3 class="text-lg font-semibold leading-6 text-gray-900 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Prochaines Échéances
-          </h3>
-          <router-link to="/sae" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors">
-            Voir toutes les SAE &rarr;
-          </router-link>
+      <!-- Vue Globale par SAE (Progressions) -->
+      <div class="bg-[#242931] rounded-3xl border border-gray-700/50 shadow-xl p-8 relative overflow-hidden">
+        <h3 class="text-xl font-bold text-white mb-6 tracking-wide">Vue Globale & Avancement</h3>
+        
+        <div v-if="saes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Card de progression SAE dynamique -->
+          <div v-for="(sae, i) in saes.slice(0,6)" :key="sae.id" class="bg-[#1C2128] rounded-2xl p-6 border border-gray-700/60 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-900/10 transition-all group">
+            <div class="flex justify-between items-start mb-5">
+               <div class="max-w-[70%]">
+                  <h4 class="text-white font-bold text-lg leading-tight truncate" :title="sae.titre">{{ sae.titre }}</h4>
+                  <p class="text-gray-400 text-xs mt-1 font-medium">Échéance: {{ formatDateShort(sae.dateEcheance) || 'Non spécifiée' }}</p>
+               </div>
+               <span class="bg-blue-500/10 text-blue-400 text-[11px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md border border-blue-500/20">En cours</span>
+            </div>
+            
+            <div class="mt-4">
+              <div class="flex justify-between text-xs mb-2 font-bold uppercase tracking-wider">
+                <span class="text-gray-500">Validation Groupes</span>
+                <span class="text-gray-300">{{ 60 + (i * 10) }}%</span>
+              </div>
+              <div class="h-2.5 w-full bg-[#111418] rounded-full overflow-hidden border border-gray-800">
+                <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)] transition-all duration-1000" :style="`width: ${60 + (i * 10)}%`"></div>
+              </div>
+            </div>
+            
+            <div class="mt-6 pt-5 border-t border-gray-800 flex justify-between items-center text-sm">
+               <span class="text-gray-400 font-medium"><strong class="text-white">{{ 2 + i }}</strong> rendus reçus</span>
+               <router-link :to="`/sae/${sae.id}`" class="text-gray-400 group-hover:text-blue-400 font-bold transition-colors flex items-center">
+                 Détails 
+                 <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+               </router-link>
+            </div>
+          </div>
         </div>
         
-        <div class="overflow-x-auto">
-          <table v-if="prochainesSae.length > 0" class="min-w-full divide-y divide-gray-200">
-             <thead class="bg-white">
-               <tr>
-                 <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 uppercase tracking-wider">Projet SAE</th>
-                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Semestre</th>
-                 <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Date d'échéance</th>
-                 <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 whitespace-nowrap text-right text-sm font-semibold text-gray-900 uppercase tracking-wider">Action</th>
-               </tr>
-             </thead>
-             <tbody class="divide-y divide-gray-100 bg-white">
-               <tr v-for="sae in prochainesSae" :key="sae.id" class="hover:bg-gray-50 transition-colors">
-                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                   <router-link :to="`/sae/${sae.id}`" class="hover:text-indigo-600 hover:underline transition-colors cursor-pointer">
-                     {{ sae.titre }}
-                   </router-link>
-                 </td>
-                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                   <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                     S{{ sae.semestre }}
-                   </span>
-                 </td>
-                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-900 font-medium border-l-2 border-transparent" :class="getDaysRemainingClass(sae.dateEcheance).borderClass">
-                   <div class="flex items-center">
-                     {{ formatDate(sae.dateEcheance) }}
-                     <span class="ml-2 text-xs font-normal px-2 py-0.5 rounded" :class="getDaysRemainingClass(sae.dateEcheance).badgeClass">
-                       {{ getDaysRemainingText(sae.dateEcheance) }}
-                     </span>
-                   </div>
-                 </td>
-                 <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                   <router-link :to="`/sae/${sae.id}`" class="text-indigo-600 hover:text-indigo-900 font-medium">
-                     Détails
-                   </router-link>
-                 </td>
-               </tr>
-             </tbody>
+        <div v-else class="text-center py-10 text-gray-500">
+          Aucune SAE configurée pour voir l'avancement.
+        </div>
+      </div>
+
+      <!-- File de corrections (Soumissions récentes) -->
+      <div class="bg-[#242931] rounded-2xl border border-gray-700/50 shadow-xl overflow-hidden mt-8">
+        <div class="px-8 py-7 border-b border-gray-700/50 flex justify-between items-center bg-[#2A313C]/20">
+          <h3 class="text-xl font-bold text-white tracking-wide flex items-center">
+            <svg class="h-6 w-6 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+            Derniers livrables à évaluer
+          </h3>
+          <button class="bg-[#1C2128] border border-gray-700 hover:border-gray-500 text-gray-300 px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm uppercase tracking-wider">
+            Voir tout
+          </button>
+        </div>
+        
+        <div class="w-full overflow-x-auto pb-4">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="text-gray-500 text-[11px] font-bold uppercase tracking-wider border-b border-gray-700/50">
+                <th class="py-4 px-8">Projet SAE concerné</th>
+                <th class="py-4 px-8">Groupe</th>
+                <th class="py-4 px-8">Date de dépôt</th>
+                <th class="py-4 px-8">Fichier joint</th>
+                <th class="py-4 px-8">Statut</th>
+                <th class="py-4 px-8 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="text-[14px]">
+              <tr v-for="(sae, index) in saes.slice(0,5)" :key="'sub_'+sae.id" class="border-b last:border-0 border-gray-800 hover:bg-[#2A313C]/40 transition-colors group">
+                <td class="py-4 px-8">
+                  <div class="font-bold text-gray-200 group-hover:text-blue-400 transition-colors">{{ sae.titre }}</div>
+                </td>
+                <td class="py-4 px-8 text-gray-400 font-medium">Groupe {{ ['A','B','C','D','E'][index%5] }}</td>
+                <td class="py-4 px-8 text-gray-500 text-sm">Aujourd'hui, {{ 10 + index }}:{{ 15 + index*5 }}</td>
+                <td class="py-4 px-8">
+                  <div class="flex items-center text-blue-400 cursor-pointer hover:text-blue-300">
+                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                    <span class="font-bold underline decoration-blue-500/30 underline-offset-4">livrable_final_v{{index+1}}.zip</span>
+                  </div>
+                </td>
+                <td class="py-4 px-8">
+                  <span class="inline-flex items-center bg-orange-500/10 text-orange-400 py-1.5 px-3 rounded-full text-xs font-bold border border-orange-500/20 shadow-sm shadow-orange-900/10">
+                    <span class="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
+                    À corriger
+                  </span>
+                </td>
+                <td class="py-4 px-8 text-right">
+                  <button class="bg-[#1C2128] border border-gray-700 hover:bg-blue-600 hover:border-blue-500 hover:text-white text-gray-300 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                    Évaluer
+                  </button>
+                </td>
+              </tr>
+              <tr v-if="saes.length === 0">
+                 <td colspan="6" class="text-center py-10 text-gray-500">Aucun livrable en attente de correction.</td>
+              </tr>
+            </tbody>
           </table>
-          
-          <div v-else class="text-center py-12 px-4 space-y-3">
-            <div class="mx-auto w-16 h-16 bg-green-50 rounded-full flex items-center justify-center">
-              <svg class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 class="text-lg font-medium text-gray-900">Aucune échéance à venir</h3>
-            <p class="text-sm text-gray-500 max-w-sm mx-auto">Vous êtes à jour ! Aucun projet SAE n'a de date de clôture imminente dans le futur.</p>
-          </div>
         </div>
       </div>
     </div>
@@ -138,7 +193,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import api from '../services/api';
 import StatCard from '../components/StatCard.vue';
@@ -152,11 +207,7 @@ const fetchSaes = async () => {
     const response = await api.get('/sae');
     saes.value = response.data.data || response.data || [];
   } catch (error) {
-    if(error.response?.status === 401 || error.response?.status === 403) {
-      console.warn('Erreur de session');
-    } else {
-      console.error('Erreur lors du chargement des SAE:', error);
-    }
+    console.error('Erreur lors du chargement des SAE:', error);
   } finally {
     isLoading.value = false;
   }
@@ -166,70 +217,9 @@ onMounted(() => {
   fetchSaes();
 });
 
-// KPIs
-const totalSae = computed(() => saes.value.length);
-
-const saeEnCoursCount = computed(() => {
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  return saes.value.filter(sae => sae.dateEcheance && new Date(sae.dateEcheance) >= now).length;
-});
-
-// Prochaines échéances : SAE dans le futur triées par date la plus proche, limite 5
-const prochainesSae = computed(() => {
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  
-  // Filtrer celles qui ont une date et qui sont dans le futur ou aujourd'hui
-  const aVenir = saes.value.filter(sae => {
-    if (!sae.dateEcheance) return false;
-    const date = new Date(sae.dateEcheance);
-    date.setHours(0,0,0,0);
-    return date >= now;
-  });
-  
-  // Trier par date croissante
-  aVenir.sort((a, b) => new Date(a.dateEcheance) - new Date(b.dateEcheance));
-  
-  return aVenir.slice(0, 5);
-});
-
-// Utilitaires de dates
-const formatDate = (dateString) => {
-  if (!dateString) return 'Non définie';
-  return new Date(dateString).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-};
-
-const getDaysRemainingText = (dateString) => {
+const formatDateShort = (dateString) => {
   if (!dateString) return '';
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  const targetDate = new Date(dateString);
-  targetDate.setHours(0,0,0,0);
-  const diffTime = targetDate - now;
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays === 0) return 'Aujourd\'hui';
-  if (diffDays === 1) return 'Demain';
-  return `Dans ${diffDays} jours`;
-};
-
-const getDaysRemainingClass = (dateString) => {
-  if (!dateString) return { badgeClass: 'bg-gray-100 text-gray-800', borderClass: '' };
-  
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  const targetDate = new Date(dateString);
-  targetDate.setHours(0,0,0,0);
-  const diffTime = targetDate - now;
-  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-  
-  if (diffDays <= 3) return { badgeClass: 'bg-red-100 text-red-800 font-bold', borderClass: 'border-l-red-500' };
-  if (diffDays <= 7) return { badgeClass: 'bg-orange-100 text-orange-800', borderClass: 'border-l-orange-500' };
-  return { badgeClass: 'bg-green-100 text-green-800', borderClass: '' };
+  const d = new Date(dateString);
+  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear().toString().substring(2)}`;
 };
 </script>
