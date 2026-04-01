@@ -112,8 +112,10 @@ const handleLogin = async () => {
     try {
         const success = await authStore.login(email.value, password.value);
         if (success) {
-            // Routage en fonction du rôle géré dans l'index.js ou ici :
-            if (authStore.user?.role === 'ROLE_USER') {
+            const role = authStore.user?.role;
+            if (role === 'ROLE_PROF') {
+                router.push('/teacher/dashboard');
+            } else if (role === 'ROLE_USER') {
                 router.push('/student/dashboard');
             } else {
                 router.push('/dashboard');

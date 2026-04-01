@@ -26,9 +26,9 @@
              <p class="text-[12px] text-gray-500 mt-1 font-medium lowercase tracking-wide">{{ extractMatiere(sae.titre) }}@student.org</p>
           </div>
           
-          <button class="px-6 py-2 border border-gray-600/60 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors w-1/2">
-             Détail de rendu
-          </button>
+          <router-link :to="'/student/sae-detail/' + sae.id" class="px-6 py-2 border border-gray-600/60 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors text-center w-1/2">
+             Consulter
+          </router-link>
         </div>
       </div>
       

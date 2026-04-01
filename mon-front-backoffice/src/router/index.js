@@ -16,10 +16,11 @@ const router = createRouter({
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
     },
+    // ===== ESPACE ADMIN =====
     {
       path: '/',
       component: AdminLayout,
-      meta: { requiresAuth: true }, // Toutes les routes enfants sont protégées
+      meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
       children: [
         {
           path: '',
@@ -31,41 +32,64 @@ const router = createRouter({
           component: () => import('../views/DashboardView.vue'),
         },
         {
-          path: 'documents',
-          name: 'documentList',
-          component: () => import('../views/DocumentsView.vue'),
-        },
-        {
           path: 'profil',
           name: 'profil',
           component: () => import('../views/ProfilView.vue'),
         },
         {
+          path: 'users',
+          name: 'userList',
+          component: () => import('../views/UserListView.vue'),
+        }
+      ]
+    },
+    // ===== ESPACE PROFESSEUR =====
+    {
+      path: '/teacher',
+      component: () => import('../layouts/TeacherLayout.vue'),
+      meta: { requiresAuth: true, role: 'ROLE_PROF' },
+      children: [
+        {
+          path: '',
+          redirect: '/teacher/dashboard'
+        },
+        {
+          path: 'dashboard',
+          name: 'teacherDashboard',
+          component: () => import('../views/DashboardView.vue'),
+        },
+        {
+          path: 'documents',
+          name: 'teacherDocumentList',
+          component: () => import('../views/DocumentsView.vue'),
+        },
+        {
+          path: 'profil',
+          name: 'teacherProfil',
+          component: () => import('../views/ProfilView.vue'),
+        },
+        {
           path: 'sae',
-          name: 'saeList',
+          name: 'teacherSaeList',
           component: () => import('../views/SaeListView.vue'),
         },
         {
           path: 'sae/:id',
-          name: 'saeDetail',
+          name: 'teacherSaeDetail',
           component: () => import('../views/SaeDetailView.vue'),
         },
         {
-          path: 'users',
-          name: 'userList',
-          component: () => import('../views/UserListView.vue'),
-        },
-        {
           path: 'annonces',
-          name: 'annonceList',
+          name: 'teacherAnnonceList',
           component: () => import('../views/AnnonceListView.vue'),
         }
       ]
     },
+    // ===== ESPACE ÉTUDIANT =====
     {
       path: '/student',
       component: () => import('../layouts/StudentLayout.vue'),
-      meta: { requiresAuth: true }, // Protégé et réservé aux étudiants (géré par le beforeEach)
+      meta: { requiresAuth: true, role: 'ROLE_USER' },
       children: [
         {
           path: '',
@@ -77,16 +101,26 @@ const router = createRouter({
           component: () => import('../views/StudentDashboardView.vue'),
         },
         {
+          path: 'profil',
+          name: 'studentProfil',
+          component: () => import('../views/ProfilView.vue'),
+        },
+        {
           path: 'sae/:status',
           name: 'studentSaeList',
           component: () => import('../views/StudentSaeListView.vue'),
+        },
+        {
+          path: 'sae-detail/:id',
+          name: 'studentSaeDetail',
+          component: () => import('../views/StudentSaeDetailView.vue'),
         }
       ]
     }
   ]
 });
 
-// Navigation Guard (Sécurité Front)
+// Navigation Guard (Sécurité Front - 3 rôles)
 router.beforeEach((to, from) => {
   const authStore = useAuthStore();
   
@@ -95,17 +129,22 @@ router.beforeEach((to, from) => {
   }
   
   if (to.meta.requiresAuth && authStore.user) {
-    const isAdmin = authStore.user.role === 'ROLE_ADMIN';
-    const isStudentRoute = to.path.startsWith('/student');
+    const role = authStore.user.role;
+    const path = to.path;
     
-    // Redirection si un étudiant tente d'accéder au backoffice admin
-    if (!isAdmin && !isStudentRoute) {
-      return '/student/dashboard';
+    // Admin accède à / (racine)
+    if (role === 'ROLE_ADMIN' && (path.startsWith('/teacher') || path.startsWith('/student'))) {
+      return '/dashboard';
     }
     
-    // Redirection si admin tente d'accéder à l'espace étudiant (optionnel)
-    if (isAdmin && isStudentRoute) {
-       return '/dashboard';
+    // Prof accède à /teacher
+    if (role === 'ROLE_PROF' && !path.startsWith('/teacher')) {
+      return '/teacher/dashboard';
+    }
+    
+    // Étudiant accède à /student
+    if (role === 'ROLE_USER' && !path.startsWith('/student')) {
+      return '/student/dashboard';
     }
   }
 });

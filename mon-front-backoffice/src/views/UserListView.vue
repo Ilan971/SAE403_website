@@ -50,8 +50,12 @@
               </td>
               <td class="whitespace-nowrap px-3 py-5 text-sm text-gray-400">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold tracking-wide" 
-                      :class="user.role === 'ROLE_ADMIN' ? 'bg-[#7C5CFC]/20 text-[#9b82fd] border border-[#7C5CFC]/30' : 'bg-[#01c7a8]/20 text-[#01c7a8] border border-[#01c7a8]/30'">
-                  {{ user.role === 'ROLE_ADMIN' ? 'Admin / Prof' : 'Étudiant' }}
+                      :class="{
+                        'bg-[#7C5CFC]/20 text-[#9b82fd] border border-[#7C5CFC]/30': user.role === 'ROLE_ADMIN',
+                        'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30': user.role === 'ROLE_PROF',
+                        'bg-[#01c7a8]/20 text-[#01c7a8] border border-[#01c7a8]/30': user.role === 'ROLE_USER'
+                      }">
+                  {{ user.role === 'ROLE_ADMIN' ? 'Admin' : user.role === 'ROLE_PROF' ? 'Professeur' : 'Étudiant' }}
                 </span>
               </td>
               <td class="relative whitespace-nowrap py-5 pl-3 pr-6 text-right text-sm font-medium">
@@ -118,7 +122,8 @@
                     <label for="role" class="block text-sm font-bold text-gray-300 mb-2">Rôle d'accès</label>
                     <select id="role" v-model="formData.role" required class="block w-full rounded-xl bg-[#1E232B] border border-gray-700 text-white px-4 py-2.5 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
                       <option value="ROLE_USER">Étudiant (Accès au portail étudiant)</option>
-                      <option value="ROLE_ADMIN">Administrateur / Professeur</option>
+                      <option value="ROLE_PROF">Professeur (Gestion des SAE)</option>
+                      <option value="ROLE_ADMIN">Administrateur (Gestion des comptes)</option>
                     </select>
                   </div>
 

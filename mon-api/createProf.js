@@ -2,15 +2,15 @@ const prisma = require('./utils/prismaClient');
 const bcrypt = require('bcrypt');
 
 async function main() {
-  const email = 'etudiant@exemple.com';
-  const password = 'student'; // Le mot de passe en clair
+  const email = 'prof@exemple.com';
+  const password = 'prof'; // Le mot de passe en clair
 
-  console.log(`Création de l'étudiant ${email}...`);
+  console.log(`Création du professeur ${email}...`);
 
   // Vérifier si l'utilisateur existe déjà
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    console.log('Cet étudiant existe déjà avec l\'ID:', existingUser.id);
+    console.log('Ce professeur existe déjà avec l\'ID:', existingUser.id);
     return;
   }
 
@@ -22,15 +22,16 @@ async function main() {
     data: {
       email: email,
       password: hashedPassword,
-      nom: 'Dupont',
-      prenom: 'Jean',
-      role: 'ROLE_USER',
+      nom: 'Martin',
+      prenom: 'Pierre',
+      role: 'ROLE_PROF',
     },
   });
 
-  console.log('Étudiant créé avec succès !');
+  console.log('Professeur créé avec succès !');
   console.log('ID:', user.id);
   console.log('Email:', user.email);
+  console.log('Rôle:', user.role);
   console.log('Mot de passe (en clair, pour se connecter):', password);
 }
 
