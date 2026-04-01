@@ -24,42 +24,42 @@
     
     <!-- Filtres et Recherche -->
     <div class="flex flex-col sm:flex-row gap-4 mb-6" v-if="!isLoading && saes.length > 0">
-      <div class="flex-1 border border-gray-700/50 rounded-xl overflow-hidden bg-[#242931] flex items-center shadow-sm">
+      <div class="flex-1 border border-white/5 rounded-xl overflow-hidden bg-[#12161E]/40 backdrop-blur-md flex items-center shadow-lg transition-all focus-within:ring-1 focus-within:ring-white/20 hover:bg-white/5">
         <div class="pl-4 pr-2">
-          <svg class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+          <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
           </svg>
         </div>
         <input type="text" id="search" v-model="searchQuery" class="block w-full bg-transparent border-0 py-3 text-gray-200 placeholder:text-gray-500 focus:ring-0 sm:text-sm" placeholder="Rechercher une SAE par titre...">
       </div>
-      <div class="sm:w-64 border border-gray-700/50 rounded-xl overflow-hidden bg-[#242931] shadow-sm">
-        <select id="semester-filter" v-model="selectedSemester" class="block w-full h-full bg-transparent border-0 py-3 pl-4 pr-10 text-gray-300 focus:ring-0 sm:text-sm appearance-none outline-none">
-          <option value="" class="bg-[#242931]">Tous les semestres</option>
-          <option value="1" class="bg-[#242931]">Semestre 1</option>
-          <option value="2" class="bg-[#242931]">Semestre 2</option>
-          <option value="3" class="bg-[#242931]">Semestre 3</option>
-          <option value="4" class="bg-[#242931]">Semestre 4</option>
-          <option value="5" class="bg-[#242931]">Semestre 5</option>
-          <option value="6" class="bg-[#242931]">Semestre 6</option>
+      <div class="sm:w-64 border border-white/5 rounded-xl overflow-hidden bg-[#12161E]/40 backdrop-blur-md shadow-lg hover:bg-white/5 transition-all">
+        <select id="semester-filter" v-model="selectedSemester" class="block w-full h-full bg-transparent border-0 py-3 pl-4 pr-10 text-gray-300 focus:ring-0 sm:text-sm appearance-none outline-none cursor-pointer">
+          <option value="" class="bg-[#0A0D14]">Tous les semestres</option>
+          <option value="1" class="bg-[#0A0D14]">Semestre 1</option>
+          <option value="2" class="bg-[#0A0D14]">Semestre 2</option>
+          <option value="3" class="bg-[#0A0D14]">Semestre 3</option>
+          <option value="4" class="bg-[#0A0D14]">Semestre 4</option>
+          <option value="5" class="bg-[#0A0D14]">Semestre 5</option>
+          <option value="6" class="bg-[#0A0D14]">Semestre 6</option>
         </select>
       </div>
     </div>
 
     <!-- Skeleton Loader (Pendant chargement Axios) -->
-    <div v-if="isLoading" class="bg-[#242931] border border-gray-700/50 shadow-xl rounded-2xl p-8 animate-pulse">
-      <div class="h-6 bg-[#374151] rounded w-1/4 mb-10"></div>
+    <div v-if="isLoading" class="bg-[#12161E]/40 backdrop-blur-xl border border-white/5 shadow-2xl rounded-2xl p-8 animate-pulse">
+      <div class="h-6 bg-white/5 rounded w-1/4 mb-10"></div>
       <div class="space-y-6">
-        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
-        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
-        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
-        <div class="h-10 bg-[#2A313C] rounded-lg w-full"></div>
+        <div class="h-10 bg-white/5 rounded-lg w-full"></div>
+        <div class="h-10 bg-white/5 rounded-lg w-full"></div>
+        <div class="h-10 bg-white/5 rounded-lg w-full"></div>
+        <div class="h-10 bg-white/5 rounded-lg w-full"></div>
       </div>
     </div>
 
     <!-- Empty State (Si aucune SAE en BDD) -->
-    <div v-else-if="saes.length === 0" class="bg-[#242931] px-6 py-20 shadow-xl border border-gray-700/50 rounded-2xl flex flex-col items-center justify-center text-center">
-      <div class="bg-[#2A313C] p-5 rounded-full mb-6">
-        <svg class="w-12 h-12 text-blue-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div v-else-if="saes.length === 0" class="bg-[#12161E]/40 backdrop-blur-xl px-6 py-20 shadow-2xl border border-white/5 rounded-2xl flex flex-col items-center justify-center text-center">
+      <div class="bg-blue-500/10 p-6 rounded-full mb-6 ring-1 ring-blue-500/20">
+        <svg class="w-12 h-12 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
         </svg>
       </div>
@@ -70,8 +70,8 @@
     </div>
 
     <!-- Empty State (Recherche infructueuse) -->
-    <div v-else-if="filteredSaes.length === 0" class="bg-[#242931] px-6 py-16 shadow-xl border border-gray-700/50 rounded-2xl flex flex-col items-center justify-center text-center">
-      <div class="bg-blue-900/20 p-4 rounded-full mb-4">
+    <div v-else-if="filteredSaes.length === 0" class="bg-[#12161E]/40 backdrop-blur-xl px-6 py-16 shadow-2xl border border-white/5 rounded-2xl flex flex-col items-center justify-center text-center">
+      <div class="bg-blue-500/10 p-5 rounded-full mb-5 ring-1 ring-blue-500/20">
         <svg class="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
@@ -80,20 +80,20 @@
       <p class="text-[14px] text-gray-400 mt-2">
         Essayez de modifier vos termes de recherche ou de changer le filtre de semestre.
       </p>
-      <button @click="searchQuery = ''; selectedSemester = ''" class="mt-6 text-sm font-bold text-blue-500 hover:text-blue-400 bg-blue-500/10 px-4 py-2 rounded-lg transition-colors">
+      <button @click="searchQuery = ''; selectedSemester = ''" class="mt-8 text-sm font-bold text-blue-400 hover:text-white bg-blue-500/20 hover:bg-blue-500/40 px-5 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)]">
         Réinitialiser les filtres
       </button>
     </div>
 
     <!-- Tableau moderne (Affichage des SAE) -->
-    <div v-else class="bg-[#242931] border border-gray-700/50 shadow-xl rounded-2xl overflow-hidden relative">
-      <div v-if="isProcessing" class="absolute inset-0 bg-[#1E232B]/60 backdrop-blur-sm z-10 flex items-center justify-center">
-         <span class="text-blue-400 font-bold tracking-widest animate-pulse">CHARGEMENT...</span>
+    <div v-else class="bg-[#12161E]/40 backdrop-blur-2xl border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-2xl overflow-hidden relative">
+      <div v-if="isProcessing" class="absolute inset-0 bg-[#0A0D14]/50 backdrop-blur-md z-10 flex items-center justify-center">
+         <span class="text-blue-400 font-bold tracking-widest animate-pulse drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">CHARGEMENT...</span>
       </div>
       <div class="overflow-x-auto pb-4">
         <table class="w-full text-left border-collapse">
-          <thead class="bg-[#2A313C]/60">
-            <tr class="text-gray-400 text-xs tracking-wider">
+          <thead class="bg-white/5 border-b border-white/10">
+            <tr class="text-gray-300 text-xs tracking-widest">
               <th scope="col" class="py-5 px-8 font-bold uppercase">Titre</th>
               <th scope="col" class="py-5 px-8 font-bold uppercase">Description</th>
               <th scope="col" class="py-5 px-8 font-bold uppercase">Semestre</th>
@@ -102,9 +102,9 @@
               <th scope="col" class="py-5 px-8 font-bold uppercase text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-700/30 text-[13px]">
-            <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-[#2A313C]/40 transition-colors group">
-              <td class="py-5 px-8 font-bold text-gray-200">
+          <tbody class="divide-y divide-white/5 text-[13px]">
+            <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-white/5 transition-colors group">
+              <td class="py-5 px-8 font-bold text-gray-100">
                 <router-link :to="`/sae/${sae.id}`" class="group-hover:text-blue-400 transition-colors cursor-pointer block">
                   {{ sae.titre }}
                 </router-link>
@@ -113,7 +113,7 @@
                 {{ sae.description }}
               </td>
               <td class="py-5 px-8">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold leading-none bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold leading-none bg-blue-500/10 text-blue-400 border border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
                   Semestre {{ sae.semestre }}
                 </span>
               </td>
@@ -127,10 +127,10 @@
                 </span>
                 <span v-else class="text-gray-500 italic">Non définie</span>
               </td>
-              <td class="py-5 px-8 text-right font-bold space-x-5">
-                <router-link :to="`/sae/${sae.id}`" class="text-blue-500 hover:text-blue-400 transition-colors cursor-pointer">Détails</router-link>
+              <td class="py-5 px-8 text-right font-bold space-x-6">
+                <router-link :to="`/sae/${sae.id}`" class="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">Détails</router-link>
                 <button @click="openEditModal(sae)" class="text-gray-400 hover:text-white transition-colors">Modifier</button>
-                <button @click="deleteSae(sae.id)" class="text-red-500 hover:text-red-400 transition-colors">Supprimer</button>
+                <button @click="deleteSae(sae.id)" class="text-red-400 hover:text-red-300 transition-colors">Supprimer</button>
               </td>
             </tr>
           </tbody>

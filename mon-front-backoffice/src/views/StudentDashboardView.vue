@@ -47,12 +47,10 @@
         </div>
 
         <div class="z-10 flex flex-col space-y-4 w-full md:w-[240px] mt-6 md:mt-0 flex-shrink-0">
-          <a v-if="featuredSae.documents && featuredSae.documents.length > 0" 
-             :href="featuredSae.documents[0].cheminFichier" 
-             target="_blank"
-             class="w-full py-3 bg-[#01c7a8] hover:bg-[#01b599] text-white font-bold rounded-full text-center transition-colors text-[14px]">
+          <router-link :to="'/student/sae-detail/' + featuredSae.id"
+             class="block w-full py-3 bg-[#01c7a8] hover:bg-[#01b599] text-white font-bold rounded-full text-center transition-colors text-[14px]">
             Consulter les consignes
-          </a>
+          </router-link>
           <button @click="openUploadModal(featuredSae)" class="w-full py-3 bg-[#ffb900] hover:bg-[#e5a600] text-gray-900 font-bold rounded-full text-center transition-colors text-[14px]">
             Déposer un document
           </button>

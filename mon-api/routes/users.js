@@ -10,6 +10,9 @@ router.use(authMiddleware);
 router.get('/', userController.getAll);
 router.get('/:id', userController.getOne);
 
+// User can modify their own profile
+router.put('/profile/me', userController.updateMyProfile);
+
 // Only admins can modify users
 router.post('/', isAdmin, userController.create);
 router.put('/:id', isAdmin, userController.update);

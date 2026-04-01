@@ -86,7 +86,7 @@
             </button>
             <div class="h-6 w-px bg-gray-700"></div>
             <!-- Profile Info -->
-            <div class="flex items-center space-x-3 cursor-pointer group">
+            <div @click="router.push('/student/profil')" class="flex items-center space-x-3 cursor-pointer group">
                <img src="https://ui-avatars.com/api/?name=Student&background=random" alt="Avatar" class="h-10 w-10 rounded-full object-cover ring-2 ring-gray-700 group-hover:ring-blue-500 transition-all">
                <div>
                   <p class="text-[13px] font-semibold text-white tracking-wide">{{ authStore.user?.prenom || 'Elève' }} {{ authStore.user?.nom || 'Inconnu' }}</p>

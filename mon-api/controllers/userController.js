@@ -64,3 +64,26 @@ exports.delete = async (req, res) => {
         res.status(500).json({ message: 'Erreur lors de la suppression' });
     }
 };
+
+exports.updateMyProfile = async (req, res) => {
+    try {
+        const { email, password, nom, prenom } = req.body;
+        const data = {};
+        if (email) data.email = email;
+        if (nom) data.nom = nom;
+        if (prenom) data.prenom = prenom;
+        
+        if (password) {
+            data.password = await bcrypt.hash(password, 10);
+        }
+
+        const user = await prisma.user.update({
+            where: { id: parseInt(req.user.id) },
+            data
+        });
+        
+        res.json(exclude(user, 'password'));
+    } catch (error) {
+        res.status(400).json({ message: 'Erreur lors de la mise à jour de profil', error: error.message });
+    }
+};
