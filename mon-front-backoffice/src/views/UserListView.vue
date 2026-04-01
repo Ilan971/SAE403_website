@@ -18,14 +18,14 @@
       </div>
     </div>
     
-    <!-- Table -->
-    <div class="bg-[#242931] border border-gray-700/50 rounded-2xl overflow-hidden relative shadow-lg">
-      <div v-if="isLoading || isProcessing" class="absolute inset-0 bg-[#242931]/80 backdrop-blur-sm z-10 flex items-center justify-center">
-         <span class="text-blue-400 font-bold tracking-widest animate-pulse">CHARGEMENT...</span>
+    <!-- Table Moderne avec Glassmorphism -->
+    <div class="bg-[#12161E]/40 backdrop-blur-2xl border border-white/5 rounded-2xl overflow-hidden relative shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+      <div v-if="isLoading || isProcessing" class="absolute inset-0 bg-[#0A0D14]/50 backdrop-blur-md z-10 flex items-center justify-center">
+         <span class="text-blue-400 font-bold tracking-widest animate-pulse drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">CHARGEMENT...</span>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-700/50">
-          <thead class="bg-[#2E3541]">
+      <div class="overflow-x-auto pb-2">
+        <table class="min-w-full divide-y divide-white/5">
+          <thead class="bg-white/5 border-b border-white/10">
             <tr>
               <th scope="col" class="py-4 pl-6 pr-3 text-left text-[12px] font-bold text-gray-300 uppercase tracking-wider">Identité</th>
               <th scope="col" class="px-3 py-4 text-left text-[12px] font-bold text-gray-300 uppercase tracking-wider">Email</th>
@@ -33,8 +33,8 @@
               <th scope="col" class="relative py-4 pl-3 pr-6 text-right text-[12px] font-bold text-gray-300 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-700/50 bg-[#242931]">
-            <tr v-for="user in users" :key="user.id" class="hover:bg-[#2A2F3B] transition-colors duration-150 group">
+          <tbody class="divide-y divide-white/5 bg-transparent">
+            <tr v-for="user in users" :key="user.id" class="hover:bg-white/5 transition-colors duration-150 group">
               <td class="whitespace-nowrap py-5 pl-6 pr-3 text-sm">
                 <div class="flex items-center">
                   <div class="h-10 w-10 flex-shrink-0 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-sm ring-2 ring-blue-500/30">
@@ -75,9 +75,9 @@
         <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity"></div>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-2xl bg-[#242931] border border-gray-700/60 shadow-2xl text-left transition-all sm:my-8 sm:w-full sm:max-w-md">
+            <div class="relative transform overflow-hidden rounded-2xl bg-[#12161E]/80 backdrop-blur-3xl border border-white/10 shadow-[0_16px_40px_rgba(0,0,0,0.5)] text-left transition-all sm:my-8 sm:w-full sm:max-w-md ring-1 ring-white/5">
               
-              <div class="bg-[#2A313C]/50 px-6 py-5 border-b border-gray-700/50 flex justify-between items-center">
+              <div class="bg-white/5 px-6 py-5 border-b border-white/5 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-white tracking-wide" id="modal-title">
                   {{ isEditing ? 'Modifier le compte' : 'Créer un compte' }}
                 </h3>
@@ -126,7 +126,7 @@
                     {{ formError }}
                   </div>
                 </div>
-                <div class="bg-[#2A313C]/50 px-6 py-4 border-t border-gray-700/50 flex flex-row-reverse gap-3">
+                <div class="bg-transparent px-6 py-4 border-t border-white/5 flex flex-row-reverse gap-3">
                   <button type="submit" :disabled="isSaving" class="rounded-xl bg-blue-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-50">
                     <span v-if="isSaving">Envoi...</span>
                     <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer le compte' }}</span>
