@@ -105,7 +105,7 @@
           <tbody class="divide-y divide-white/5 text-[13px]">
             <tr v-for="sae in filteredSaes" :key="sae.id" class="hover:bg-white/5 transition-colors group">
               <td class="py-5 px-8 font-bold text-gray-100">
-                <router-link :to="`/sae/${sae.id}`" class="group-hover:text-blue-400 transition-colors cursor-pointer block">
+                <router-link :to="authStore.user?.role === 'ROLE_ADMIN' ? `/sae/${sae.id}` : `/teacher/sae/${sae.id}`" class="group-hover:text-blue-400 transition-colors cursor-pointer block">
                   {{ sae.titre }}
                 </router-link>
               </td>
@@ -128,7 +128,7 @@
                 <span v-else class="text-gray-500 italic">Non définie</span>
               </td>
               <td class="py-5 px-8 text-right font-bold space-x-6">
-                <router-link :to="`/sae/${sae.id}`" class="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">Détails</router-link>
+                <router-link :to="authStore.user?.role === 'ROLE_ADMIN' ? `/sae/${sae.id}` : `/teacher/sae/${sae.id}`" class="text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">Détails</router-link>
                 <button @click="openEditModal(sae)" class="text-gray-400 hover:text-white transition-colors">Modifier</button>
                 <button @click="deleteSae(sae.id)" class="text-red-400 hover:text-red-300 transition-colors">Supprimer</button>
               </td>
@@ -262,7 +262,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import api from '../services/api';
+import { useAuthStore } from '../stores/authStore';
 import { toast } from 'vue3-toastify';
+
+const authStore = useAuthStore();
 
 const saes = ref([]);
 const isLoading = ref(true);

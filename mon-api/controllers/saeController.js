@@ -2,7 +2,12 @@ const prisma = require('../utils/prismaClient');
 
 exports.getAll = async (req, res) => {
     try {
-        const saes = await prisma.sae.findMany();
+        const saes = await prisma.sae.findMany({
+            include: { 
+                users: { select: { id: true, role: true } },
+                documents: true 
+            }
+        });
         res.json(saes);
     } catch (error) {
         res.status(500).json({ message: 'Erreur serveur', error: error.message });

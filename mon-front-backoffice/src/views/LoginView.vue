@@ -3,6 +3,14 @@
     <!-- Overlay sombre pour contraster avec l'image -->
     <div class="absolute inset-0 bg-[#0F131A]/80 backdrop-blur-[2px] z-0"></div>
 
+    <!-- Bouton retour -->
+    <router-link to="/" class="absolute top-6 left-6 z-20 flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+      <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-all">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </div>
+      <span class="text-sm font-medium hidden sm:inline">Accueil</span>
+    </router-link>
+
     <div class="sm:mx-auto sm:w-full sm:max-w-md relative z-10 flex flex-col items-center">
       <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6">
         <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,7 +126,7 @@ const handleLogin = async () => {
             } else if (role === 'ROLE_USER') {
                 router.push('/student/dashboard');
             } else {
-                router.push('/dashboard');
+                router.push('/admin/dashboard');
             }
         }
     } catch (error) {

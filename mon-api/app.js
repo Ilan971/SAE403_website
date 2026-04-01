@@ -12,6 +12,7 @@ var saeRouter = require('./routes/sae');
 var documentsRouter = require('./routes/documents');
 var annoncesRouter = require('./routes/annonces');
 var dashboardsRouter = require('./routes/dashboards');
+var notesRouter = require('./routes/notes');
 
 var app = express();
 
@@ -39,5 +40,6 @@ app.use('/api/sae', saeRouter);
 app.use('/api/documents', documentsRouter);
 app.use('/api/annonces', annoncesRouter);
 app.use('/api/dashboard', dashboardsRouter);
+app.use('/api/notes', notesRouter);
 
 module.exports = app;

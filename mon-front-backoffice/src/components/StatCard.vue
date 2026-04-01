@@ -1,9 +1,13 @@
 <template>
-  <div class="bg-[#242931] p-5 rounded-2xl shadow-lg border border-gray-700/30 flex items-center justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 transition-all duration-300 group cursor-default">
-    <div class="flex flex-col h-full justify-between">
+  <component 
+    :is="to ? 'router-link' : 'div'" 
+    :to="to"
+    class="bg-[#242931] p-5 rounded-2xl shadow-lg border border-gray-700/30 flex items-center justify-between hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 transition-all duration-300 group cursor-pointer no-underline block"
+  >
+    <div class="flex flex-col h-full justify-between overflow-hidden">
       <h4 class="text-[13px] font-bold text-gray-400 truncate mb-1">{{ title }}</h4>
       <p class="text-2xl font-extrabold text-white">{{ value }}</p>
-      <p class="text-[11px] text-gray-500 font-medium mt-1">{{ subtitle }}</p>
+      <p class="text-[11px] text-gray-500 font-medium mt-1 truncate">{{ subtitle }}</p>
     </div>
     
     <div class="flex-shrink-0 ml-3 h-[52px] w-[52px] rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-inner" :class="colorBoxClass">
@@ -12,7 +16,7 @@
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       </slot>
     </div>
-  </div>
+  </component>
 </template>
 
 <script setup>
@@ -34,6 +38,10 @@ const props = defineProps({
   color: {
     type: String,
     default: 'indigo'
+  },
+  to: {
+    type: String,
+    default: null
   }
 });
 

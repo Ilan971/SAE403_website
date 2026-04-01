@@ -74,6 +74,7 @@
           value="8" 
           subtitle="Rendus à évaluer"
           color="orange"
+          to="/teacher/sae"
         >
           <template #icon>
              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
@@ -119,7 +120,7 @@
             
             <div class="mt-6 pt-5 border-t border-gray-800 flex justify-between items-center text-sm">
                <span class="text-gray-400 font-medium"><strong class="text-white">{{ 2 + i }}</strong> rendus reçus</span>
-               <router-link :to="`/sae/${sae.id}`" class="text-gray-400 group-hover:text-blue-400 font-bold transition-colors flex items-center">
+               <router-link :to="`/teacher/sae/${sae.id}`" class="text-gray-400 group-hover:text-blue-400 font-bold transition-colors flex items-center">
                  Détails 
                  <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                </router-link>
@@ -139,9 +140,9 @@
             <svg class="h-6 w-6 mr-3 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
             Derniers livrables à évaluer
           </h3>
-          <button class="bg-[#1C2128] border border-gray-700 hover:border-gray-500 text-gray-300 px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm uppercase tracking-wider">
+          <router-link to="/teacher/sae" class="bg-[#1C2128] border border-gray-700 hover:border-gray-500 text-gray-300 px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm uppercase tracking-wider no-underline inline-block">
             Voir tout
-          </button>
+          </router-link>
         </div>
         
         <div class="w-full overflow-x-auto pb-4">
@@ -176,9 +177,9 @@
                   </span>
                 </td>
                 <td class="py-4 px-8 text-right">
-                  <button class="bg-[#1C2128] border border-gray-700 hover:bg-blue-600 hover:border-blue-500 hover:text-white text-gray-300 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm">
+                  <router-link :to="`/teacher/sae/${sae.id}#grading`" class="bg-[#1C2128] border border-gray-700 hover:bg-blue-600 hover:border-blue-500 hover:text-white text-gray-300 px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-sm no-underline inline-block">
                     Évaluer
-                  </button>
+                  </router-link>
                 </td>
               </tr>
               <tr v-if="saes.length === 0">

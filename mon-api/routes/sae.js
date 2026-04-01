@@ -4,6 +4,9 @@ const saeController = require('../controllers/saeController');
 const authMiddleware = require('../middlewares/auth');
 const isAdmin = require('../middlewares/isAdmin');
 
+// Route publique (pas d'auth requise) pour la page d'accueil
+router.get('/public', saeController.getAll);
+
 router.use(authMiddleware);
 
 router.get('/', saeController.getAll);

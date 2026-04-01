@@ -10,15 +10,17 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  password  String
-  role      String     @default("ROLE_USER")
-  nom       String
-  prenom    String
-  documents Document[]
-  annonces  Annonce[]
-  saes      Sae[]
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  password     String
+  role         String     @default("ROLE_USER")
+  nom          String
+  prenom       String
+  documents    Document[]
+  annonces     Annonce[]
+  saes         Sae[]
+  notesRecues  Note[]     @relation("NotesRecues")
+  notesDonnees Note[]     @relation("NotesDonnees")
 }
 
 model Sae {
@@ -31,6 +33,7 @@ model Sae {
   documents          Document[]
   annonces           Annonce[]
   users              User[]
+  notes              Note[]
 }
 
 model Document {
@@ -53,4 +56,19 @@ model Annonce {
   userId          Int
   sae             Sae      @relation(fields: [saeId], references: [id])
   user            User     @relation(fields: [userId], references: [id])
+}
+
+model Note {
+  id          Int      @id @default(autoincrement())
+  valeur      Float
+  commentaire String?  @db.Text
+  dateNotation DateTime @default(now())
+  saeId       Int
+  etudiantId  Int
+  profId      Int
+  sae         Sae      @relation(fields: [saeId], references: [id])
+  etudiant    User     @relation("NotesRecues", fields: [etudiantId], references: [id])
+  prof        User     @relation("NotesDonnees", fields: [profId], references: [id])
+
+  @@unique([saeId, etudiantId])
 }

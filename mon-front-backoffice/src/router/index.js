@@ -5,7 +5,17 @@ import { useAuthStore } from '../stores/authStore';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to) {
+    if (to.hash) return { el: to.hash, behavior: 'smooth' };
+    return { top: 0 };
+  },
   routes: [
+    // ===== PAGE D'ACCUEIL (publique) =====
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('../views/HomeView.vue'),
+    },
     {
       path: '/login',
       name: 'login',
@@ -18,13 +28,13 @@ const router = createRouter({
     },
     // ===== ESPACE ADMIN =====
     {
-      path: '/',
+      path: '/admin',
       component: AdminLayout,
       meta: { requiresAuth: true, role: 'ROLE_ADMIN' },
       children: [
         {
           path: '',
-          redirect: '/dashboard'
+          redirect: '/admin/dashboard'
         },
         {
           path: 'dashboard',
@@ -40,6 +50,21 @@ const router = createRouter({
           path: 'users',
           name: 'userList',
           component: () => import('../views/UserListView.vue'),
+        },
+        {
+          path: 'sae',
+          name: 'adminSaeList',
+          component: () => import('../views/SaeListView.vue'),
+        },
+        {
+          path: 'sae/:id',
+          name: 'adminSaeDetail',
+          component: () => import('../views/SaeDetailView.vue'),
+        },
+        {
+          path: 'annonces',
+          name: 'adminAnnonceList',
+          component: () => import('../views/AnnonceListView.vue'),
         }
       ]
     },
@@ -132,9 +157,9 @@ router.beforeEach((to, from) => {
     const role = authStore.user.role;
     const path = to.path;
     
-    // Admin accède à / (racine)
-    if (role === 'ROLE_ADMIN' && (path.startsWith('/teacher') || path.startsWith('/student'))) {
-      return '/dashboard';
+    // Admin accède à /admin
+    if (role === 'ROLE_ADMIN' && !path.startsWith('/admin')) {
+      return '/admin/dashboard';
     }
     
     // Prof accède à /teacher
