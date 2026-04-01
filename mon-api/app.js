@@ -22,7 +22,22 @@ app.use(cookieParser());
 
 // CORS Configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
+  origin: function (origin, callback) {
+    // Si pas d'origine (ex: requêtes serveur à serveur), on autorise
+    if (!origin) return callback(null, true);
+    
+    const configuredOrigin = process.env.FRONTEND_URL || 'http://localhost:4200';
+    
+    // On autorise si c'est l'URL configurée, le localhost, ou N'IMPORTE QUEL lien Vercel
+    if (origin === configuredOrigin || 
+        origin.startsWith('http://localhost') || 
+        origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    // Sinon on bloque
+    return callback(new Error('Bloqué par CORS'), false);
+  },
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization'
 }));
