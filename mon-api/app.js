@@ -28,6 +28,10 @@ app.use(cors({
 }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/api/ping', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Je suis réveillé !' });
+});
+
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api', authRouter); // Maps to /api/login
