@@ -59,7 +59,7 @@
       <!-- Paramètres / Déconnexion -->
       <div class="mt-auto mb-8 space-y-2">
         <button 
-          @click="handleLogout"
+          @click="showLogoutModal = true"
           class="w-full flex items-center pl-8 py-4 text-gray-500 hover:text-red-400 transition-colors group"
         >
           <svg class="h-6 w-6 mr-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" /></svg>
@@ -126,6 +126,32 @@
         </div>
       </div>
     </main>
+
+    <!-- Logout Modal -->
+    <Teleport to="body">
+      <div v-if="showLogoutModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-[#0F131A]/80 backdrop-blur-sm transition-opacity duration-300"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <div class="relative transform overflow-hidden rounded-2xl bg-[#181D23] border border-gray-800 shadow-2xl text-left transition-all w-full max-w-sm flex flex-col pt-6">
+              <div class="px-6 flex items-center justify-center mb-4">
+                 <div class="h-14 w-14 rounded-full bg-red-500/10 flex items-center justify-center ring-2 ring-red-500/20">
+                    <svg class="h-7 w-7 text-red-400 pl-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                 </div>
+              </div>
+              <div class="px-6 text-center mb-6">
+                <h3 class="text-xl font-bold text-white mb-2" id="modal-title">Déconnexion</h3>
+                <p class="text-[14px] text-gray-400 font-medium">Êtes-vous sûr de vouloir vous déconnecter de votre compte Étudiant ?</p>
+              </div>
+              <div class="bg-[#1E232B] px-6 py-4 flex gap-3 mt-auto border-t border-gray-800">
+                <button @click="showLogoutModal = false" class="flex-1 bg-transparent hover:bg-gray-800 text-gray-300 font-bold py-2.5 rounded-xl border border-gray-700 transition-all text-sm">Annuler</button>
+                <button @click="confirmLogout" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 rounded-xl shadow-[0_0_15px_rgba(239,68,68,0.2)] transition-all text-sm">Se déconnecter</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -140,6 +166,7 @@ const router = useRouter();
 
 const globalSearch = ref('');
 const showNotifs = ref(false);
+const showLogoutModal = ref(false);
 
 const handleSearch = () => {
   if (globalSearch.value.trim()) {
@@ -148,11 +175,10 @@ const handleSearch = () => {
   }
 };
 
-const handleLogout = () => {
-  if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-    authStore.logout();
-    router.push('/login');
-  }
+const confirmLogout = () => {
+  showLogoutModal.value = false;
+  authStore.logout();
+  router.push('/login');
 };
 </script>
 
