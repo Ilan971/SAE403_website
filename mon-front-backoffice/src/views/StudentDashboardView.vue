@@ -61,9 +61,25 @@
       <div class="bg-[#242931] rounded-2xl overflow-hidden mt-8">
         <div class="px-8 py-5 flex justify-between items-center bg-[#242931]">
            <h3 class="text-[20px] font-bold text-white tracking-wide">Détails des rendus</h3>
-           <div class="bg-gray-800/80 border border-gray-700 px-4 py-1.5 rounded-lg text-sm text-gray-300 flex items-center cursor-pointer hover:bg-gray-700/80">
-              October
-              <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+           <div class="relative">
+              <select v-model="filterMonth" class="bg-gray-800/80 border border-gray-700 pl-4 pr-10 py-1.5 rounded-lg text-sm text-gray-300 cursor-pointer hover:bg-gray-700/80 focus:ring-1 focus:ring-blue-500 outline-none transition-colors appearance-none">
+                 <option value="">Tous les mois</option>
+                 <option value="1">Janvier</option>
+                 <option value="2">Février</option>
+                 <option value="3">Mars</option>
+                 <option value="4">Avril</option>
+                 <option value="5">Mai</option>
+                 <option value="6">Juin</option>
+                 <option value="7">Juillet</option>
+                 <option value="8">Août</option>
+                 <option value="9">Septembre</option>
+                 <option value="10">Octobre</option>
+                 <option value="11">Novembre</option>
+                 <option value="12">Décembre</option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-300">
+                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+              </div>
            </div>
         </div>
         <div class="overflow-x-auto">
@@ -78,7 +94,7 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-700/50 text-[13px] bg-[#242931]">
-              <tr v-for="rendu in mesRendus" :key="rendu.id" class="hover:bg-[#2A2F3B] transition-colors">
+              <tr v-for="rendu in filteredRendus" :key="rendu.id" class="hover:bg-[#2A2F3B] transition-colors">
                 <td class="py-5 px-8 font-medium text-gray-300">
                   <div class="flex items-center space-x-4">
                     <div class="w-9 h-9 rounded-full bg-orange-200/20 border-2 border-orange-200/40 flex items-center justify-center shrink-0 overflow-hidden">
@@ -88,7 +104,7 @@
                   </div>
                 </td>
                 <td class="py-5 px-6 text-gray-400 relative -left-8">{{ extractMatiere(rendu.sae?.titre) }}</td>
-                <td class="py-5 px-6 text-gray-400 relative -left-8">12.09.2026 - 12:53 PM</td>
+                <td class="py-5 px-6 text-gray-400 relative -left-8">{{ formatDateDisplay(rendu.dateDepot) }}</td>
                 <td class="py-5 px-6 text-gray-400 relative -left-8">423</td>
                 <td class="py-5 px-8 text-right">
                   <span class="inline-flex items-center px-[14px] py-[4px] rounded-full text-[12px] font-bold bg-[#01c7a8] text-white tracking-wide">
@@ -96,9 +112,9 @@
                   </span>
                 </td>
               </tr>
-              <tr v-if="mesRendus.length === 0">
+              <tr v-if="filteredRendus.length === 0">
                 <td colspan="5" class="px-8 py-10 text-center text-gray-500 text-sm">
-                  Aucun rendu soumis pour le moment.
+                  Aucun rendu soumis pour cette période.
                 </td>
               </tr>
             </tbody>
@@ -157,6 +173,25 @@ import { toast } from 'vue3-toastify';
 const isLoading = ref(true);
 const saes = ref([]);
 const mesRendus = ref([]);
+
+const filterMonth = ref('');
+
+const filteredRendus = computed(() => {
+    if (!filterMonth.value) return mesRendus.value;
+    return mesRendus.value.filter(r => {
+        if (!r.dateDepot) return false;
+        const d = new Date(r.dateDepot);
+        return (d.getMonth() + 1).toString() === filterMonth.value;
+    });
+});
+
+const formatDateDisplay = (dateString) => {
+    if(!dateString) return '12.09.2026 - 12:53 PM'; // default from mockup
+    const d = new Date(dateString);
+    const dateStr = d.toLocaleDateString('fr-FR').replace(/\//g, '.');
+    const timeStr = d.toLocaleTimeString('en-US', { hour: '2-digit', minute:'2-digit' });
+    return `${dateStr} - ${timeStr}`;
+};
 
 const showModal = ref(false);
 const isUploading = ref(false);

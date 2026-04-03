@@ -38,14 +38,15 @@ model Sae {
 }
 
 model Document {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   nom           String
   cheminFichier String
-  type          String  // consigne, ressource, rendu
+  type          String   // consigne, ressource, rendu
+  dateDepot     DateTime @default(now())
   saeId         Int
   userId        Int
-  sae           Sae     @relation(fields: [saeId], references: [id])
-  user          User    @relation(fields: [userId], references: [id])
+  sae           Sae      @relation(fields: [saeId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 }
 
 model Annonce {
