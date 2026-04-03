@@ -10,7 +10,7 @@
       </div>
       
       <div class="mt-4 sm:mt-0 flex flex-wrap gap-3">
-        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+        <select v-model="filterSemestre" class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
           <option value="">Tous les semestres</option>
           <option value="1">Semestre 1</option>
           <option value="2">Semestre 2</option>
@@ -18,14 +18,14 @@
           <option value="4">Semestre 4</option>
         </select>
         
-        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+        <select v-model="filterGroupe" class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
           <option value="">Tous les groupes</option>
           <option value="A">Groupe A</option>
           <option value="B">Groupe B</option>
           <option value="C">Groupe C</option>
         </select>
         
-        <select class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
+        <select v-model="filterEtat" class="bg-[#242931] border border-gray-700/80 text-gray-300 rounded-xl px-4 py-2.5 text-sm focus:ring-1 focus:ring-blue-500 outline-none shadow-sm transition-colors hover:border-gray-500 cursor-pointer appearance-none min-w-[160px]">
           <option value="">Tous les états</option>
           <option value="en_cours">En cours</option>
           <option value="a_corriger">À corriger</option>
@@ -49,7 +49,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
           title="SAE Supervisées" 
-          :value="saes.length || '0'" 
+          :value="filteredSaes.length || '0'" 
           subtitle="Au total sur ce portail"
           color="blue"
         >
@@ -97,15 +97,15 @@
       <div class="bg-[#242931] rounded-3xl border border-gray-700/50 shadow-xl p-8 relative overflow-hidden">
         <h3 class="text-xl font-bold text-white mb-6 tracking-wide">Vue Globale & Avancement</h3>
         
-        <div v-if="saes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-if="filteredSaes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Card de progression SAE dynamique -->
-          <div v-for="(sae, i) in saes.slice(0,6)" :key="sae.id" class="bg-[#1C2128] rounded-2xl p-6 border border-gray-700/60 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-900/10 transition-all group">
+          <div v-for="(sae, i) in filteredSaes.slice(0,6)" :key="sae.id" class="bg-[#1C2128] rounded-2xl p-6 border border-gray-700/60 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-900/10 transition-all group">
             <div class="flex justify-between items-start mb-5">
                <div class="max-w-[70%]">
                   <h4 class="text-white font-bold text-lg leading-tight truncate" :title="sae.titre">{{ sae.titre }}</h4>
                   <p class="text-gray-400 text-xs mt-1 font-medium">Échéance: {{ formatDateShort(sae.dateEcheance) || 'Non spécifiée' }}</p>
                </div>
-               <span class="bg-blue-500/10 text-blue-400 text-[11px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md border border-blue-500/20">En cours</span>
+               <span class="bg-blue-500/10 text-blue-400 text-[11px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-md border border-blue-500/20" :class="{ 'bg-orange-500/10 text-orange-400 border-orange-500/20': sae._etat === 'a_corriger', 'bg-gray-500/10 text-gray-400 border-gray-500/20': sae._etat === 'cloture'}">{{ sae._etat === 'en_cours' ? 'En cours' : (sae._etat === 'a_corriger' ? 'À corriger' : 'Clôturé') }}</span>
             </div>
             
             <div class="mt-4">
@@ -158,11 +158,11 @@
               </tr>
             </thead>
             <tbody class="text-[14px]">
-              <tr v-for="(sae, index) in saes.slice(0,5)" :key="'sub_'+sae.id" class="border-b last:border-0 border-gray-800 hover:bg-[#2A313C]/40 transition-colors group">
+              <tr v-for="(sae, index) in filteredSaes.slice(0,5)" :key="'sub_'+sae.id" class="border-b last:border-0 border-gray-800 hover:bg-[#2A313C]/40 transition-colors group">
                 <td class="py-4 px-8">
                   <div class="font-bold text-gray-200 group-hover:text-blue-400 transition-colors">{{ sae.titre }}</div>
                 </td>
-                <td class="py-4 px-8 text-gray-400 font-medium">Groupe {{ ['A','B','C','D','E'][index%5] }}</td>
+                <td class="py-4 px-8 text-gray-400 font-medium">Groupe {{ sae._groupe }}</td>
                 <td class="py-4 px-8 text-gray-500 text-sm">Aujourd'hui, {{ 10 + index }}:{{ 15 + index*5 }}</td>
                 <td class="py-4 px-8">
                   <div class="flex items-center text-blue-400 cursor-pointer hover:text-blue-300">
@@ -171,9 +171,10 @@
                   </div>
                 </td>
                 <td class="py-4 px-8">
-                  <span class="inline-flex items-center bg-orange-500/10 text-orange-400 py-1.5 px-3 rounded-full text-xs font-bold border border-orange-500/20 shadow-sm shadow-orange-900/10">
-                    <span class="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2 animate-pulse"></span>
-                    À corriger
+                  <span class="inline-flex items-center text-xs font-bold py-1.5 px-3 rounded-full border shadow-sm"
+                        :class="sae._etat === 'en_cours' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20 shadow-blue-900/10' : (sae._etat === 'a_corriger' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20 shadow-orange-900/10' : 'bg-gray-500/10 text-gray-400 border-gray-500/20 shadow-gray-900/10')">
+                    <span class="w-1.5 h-1.5 rounded-full mr-2" :class="sae._etat === 'en_cours' ? 'bg-blue-500 animate-pulse' : (sae._etat === 'a_corriger' ? 'bg-orange-500 animate-pulse' : 'bg-gray-500')"></span>
+                    {{ sae._etat === 'en_cours' ? 'En cours' : (sae._etat === 'a_corriger' ? 'À corriger' : 'Clôturé') }}
                   </span>
                 </td>
                 <td class="py-4 px-8 text-right">
@@ -182,7 +183,7 @@
                   </router-link>
                 </td>
               </tr>
-              <tr v-if="saes.length === 0">
+              <tr v-if="filteredSaes.length === 0">
                  <td colspan="6" class="text-center py-10 text-gray-500">Aucun livrable en attente de correction.</td>
               </tr>
             </tbody>
@@ -207,10 +208,42 @@ const basePath = computed(() => {
   return authStore.user?.role === 'ROLE_ADMIN' ? '/admin' : '/teacher';
 });
 
+const filterSemestre = ref('');
+const filterGroupe = ref('');
+const filterEtat = ref('');
+
+const filteredSaes = computed(() => {
+  return saes.value.filter(sae => {
+    let matchSemestre = true;
+    if (filterSemestre.value) {
+      matchSemestre = sae.semestre?.toString() === filterSemestre.value;
+    }
+    
+    let matchEtat = true;
+    if (filterEtat.value) {
+      matchEtat = sae._etat === filterEtat.value;
+    }
+    
+    let matchGroupe = true;
+    if (filterGroupe.value) {
+      matchGroupe = sae._groupe === filterGroupe.value;
+    }
+
+    return matchSemestre && matchEtat && matchGroupe;
+  });
+});
+
 const fetchSaes = async () => {
   try {
     const response = await api.get('/sae');
-    saes.value = response.data.data || response.data || [];
+    const loadedSaes = response.data.data || response.data || [];
+    
+    saes.value = loadedSaes.map(sae => {
+       const isPast = new Date(sae.dateEcheance) < new Date();
+       sae._etat = isPast ? 'a_corriger' : 'en_cours';
+       sae._groupe = ['A','B','C'][sae.id % 3];
+       return sae;
+    });
   } catch (error) {
     console.error('Erreur lors du chargement des SAE:', error);
   } finally {

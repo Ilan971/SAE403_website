@@ -10,7 +10,7 @@ router.use(authMiddleware);
 router.get('/', documentController.getAll);
 router.get('/:id', documentController.getOne);
 
-router.post('/', isAdmin, upload.single('fichier'), documentController.create);
+router.post('/', upload.single('fichier'), documentController.create);
 router.put('/:id', isAdmin, upload.single('fichier'), documentController.update);
 router.delete('/:id', isAdmin, documentController.delete);
 
