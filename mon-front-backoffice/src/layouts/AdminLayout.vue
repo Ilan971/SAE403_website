@@ -135,8 +135,10 @@ const handleSearch = () => {
 };
 
 const handleLogout = () => {
-  authStore.logout();
-  router.push('/login');
+  if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+    authStore.logout();
+    router.push('/login');
+  }
 };
 </script>
 
