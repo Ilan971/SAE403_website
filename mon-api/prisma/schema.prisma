@@ -30,6 +30,7 @@ model Sae {
   semestre           Int
   anneeUniversitaire String
   dateEcheance       DateTime
+  isPublic           Boolean    @default(false)
   documents          Document[]
   annonces           Annonce[]
   users              User[]

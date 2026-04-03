@@ -14,6 +14,10 @@
         <h2 class="text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
           <template v-if="!isLoading && sae">
             {{ sae.titre }}
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ml-2 border" 
+                  :class="sae.isPublic ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : 'bg-gray-500/20 text-gray-400 border-gray-500/30'">
+              {{ sae.isPublic ? 'Publique' : 'Privée' }}
+            </span>
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 ml-2">
               Semestre {{ sae.semestre }}
             </span>
@@ -118,6 +122,18 @@
                 {{ sae.dateEcheance ? new Date(sae.dateEcheance).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Non définie' }}
               </span>
             </div>
+            <!-- Visibilité Toggle -->
+            <div class="pt-6 border-t border-gray-700/50">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <span class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Visibilité du Rendu</span>
+                  <p class="text-sm text-gray-400 leading-tight">Afficher sur le portfolio public.</p>
+                </div>
+                <button @click="togglePublish" :disabled="isPublishing" class="relative inline-flex h-7 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#242931]" :class="sae.isPublic ? 'bg-emerald-500' : 'bg-gray-700'">
+                  <span class="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out" :class="sae.isPublic ? 'translate-x-7' : 'translate-x-0'"></span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -141,6 +157,7 @@ import { toast } from 'vue3-toastify';
 const route = useRoute();
 const sae = ref(null);
 const isLoading = ref(true);
+const isPublishing = ref(false);
 
 const loadSae = async () => {
   try {
@@ -153,8 +170,21 @@ const loadSae = async () => {
   }
 };
 
+const togglePublish = async () => {
+  isPublishing.value = true;
+  try {
+    const response = await api.patch(`/sae/${sae.value.id}/publish`);
+    sae.value.isPublic = response.data.isPublic;
+    toast.success(sae.value.isPublic ? 'Votre SAE est maintenant affichée sur le portfolio public.' : 'Votre SAE est redevenue privée.');
+  } catch (error) {
+    console.error('Erreur de publication:', error);
+    toast.error('Impossible de modifier la visibilité.');
+  } finally {
+    isPublishing.value = false;
+  }
+};
+
 onMounted(() => {
   loadSae();
 });
-
 </script>

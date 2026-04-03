@@ -14,6 +14,53 @@ exports.getAll = async (req, res) => {
     }
 };
 
+exports.getPublic = async (req, res) => {
+    try {
+        const saes = await prisma.sae.findMany({
+            where: { isPublic: true },
+            include: { 
+                users: { select: { id: true, role: true } },
+                documents: true 
+            }
+        });
+        res.json(saes);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur serveur', error: error.message });
+    }
+};
+
+exports.togglePublish = async (req, res) => {
+    try {
+        const saeId = parseInt(req.params.id);
+        const userId = req.user.userId;
+        const userRole = req.user.role;
+
+        const sae = await prisma.sae.findUnique({
+            where: { id: saeId },
+            include: { users: true }
+        });
+
+        if (!sae) {
+            return res.status(404).json({ message: 'SAE non trouvée' });
+        }
+
+        // Seul un membre du groupe (ou un prof/admin) peut la publier
+        const isMember = sae.users.some(u => u.id === userId);
+        if (!isMember && userRole !== 'ROLE_ADMIN' && userRole !== 'ROLE_PROF') {
+            return res.status(403).json({ message: 'Vous ne participez pas à cette SAE' });
+        }
+
+        const updatedSae = await prisma.sae.update({
+            where: { id: saeId },
+            data: { isPublic: !sae.isPublic }
+        });
+
+        res.json(updatedSae);
+    } catch (error) {
+        res.status(500).json({ message: 'Erreur serveur', error: error.message });
+    }
+};
+
 exports.getOne = async (req, res) => {
     try {
         const sae = await prisma.sae.findUnique({
