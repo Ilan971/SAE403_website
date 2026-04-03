@@ -54,6 +54,16 @@
           <svg class="h-6 w-6 mr-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
           <span class="font-medium text-[15px]">SAE En correction</span>
         </router-link>
+
+        <router-link 
+          to="/student/annonces" 
+          class="flex items-center pl-8 py-4 relative text-gray-400 hover:text-white transition-colors group"
+          :class="{ 'text-blue-400 bg-gray-800/30': $route.path === '/student/annonces' }"
+        >
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-md transition-opacity" :class="$route.path === '/student/annonces' ? 'opacity-100' : 'opacity-0'"></div>
+          <svg class="h-6 w-6 mr-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014-5.395c-.326 1.483-.518 3.031-.518 4.62 0 1.589.192 3.137.518 4.62m0 0c.256 1.168.59 2.302 1.014 3.395m-1.014-3.395c-.326-1.483-.518-3.031-.518-4.62m0 0H21" /></svg>
+          <span class="font-medium text-[15px]">Annonces</span>
+        </router-link>
       </nav>
 
       <!-- Paramètres / Déconnexion -->

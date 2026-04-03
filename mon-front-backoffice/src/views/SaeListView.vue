@@ -215,11 +215,18 @@
                       </svg>
                     </div>
                     <div v-else class="border border-gray-700 rounded-xl overflow-hidden bg-[#1E232B]">
-                      <!-- Option Tout Sélectionner -->
-                      <div class="px-4 py-3 bg-[#2A313C]/50 border-b border-gray-700 flex items-center">
-                        <input id="select-all" type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="focus:ring-blue-500 h-4 w-4 bg-[#242931] text-blue-500 border-gray-600 rounded cursor-pointer">
-                        <label for="select-all" class="ml-3 text-sm font-bold text-gray-300 cursor-pointer">Tout sélectionner</label>
-                        <span class="ml-auto text-xs font-medium text-gray-500 bg-[#242931] px-2 py-0.5 rounded-md border border-gray-700">{{ selectedUserIds.length }}/{{ allUsers.length }}</span>
+                      <!-- Option Tout Sélectionner et Classes -->
+                      <div class="px-4 py-3 bg-[#2A313C]/50 border-b border-gray-700 flex flex-col gap-3">
+                        <div class="flex items-center">
+                          <input id="select-all" type="checkbox" :checked="isAllSelected" @change="toggleSelectAll" class="focus:ring-blue-500 h-4 w-4 bg-[#242931] text-blue-500 border-gray-600 rounded cursor-pointer">
+                          <label for="select-all" class="ml-3 text-sm font-bold text-gray-300 cursor-pointer">Tout sélectionner</label>
+                          <span class="ml-auto text-xs font-medium text-gray-500 bg-[#242931] px-2 py-0.5 rounded-md border border-gray-700">{{ selectedUserIds.length }}/{{ allUsers.length }}</span>
+                        </div>
+                        <div class="flex gap-2">
+                          <button type="button" @click="selectClasse('A')" class="text-[11px] font-bold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 py-1.5 px-3 rounded-md border border-blue-500/20 transition-colors">+ Ajouter Classe A</button>
+                          <button type="button" @click="selectClasse('B')" class="text-[11px] font-bold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 py-1.5 px-3 rounded-md border border-blue-500/20 transition-colors">+ Ajouter Classe B</button>
+                          <button type="button" @click="selectClasse('C')" class="text-[11px] font-bold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 py-1.5 px-3 rounded-md border border-blue-500/20 transition-colors">+ Ajouter Classe C</button>
+                        </div>
                       </div>
                       <!-- Liste des utilisateurs -->
                       <ul class="max-h-40 overflow-y-auto divide-y divide-gray-700/50 hover:scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
@@ -313,6 +320,21 @@ const toggleSelectAll = () => {
   } else {
     selectedUserIds.value = allUsers.value.map(u => u.id);
   }
+};
+
+const usersClasse = (groupe) => {
+  const index = groupe === 'A' ? 0 : groupe === 'B' ? 1 : 2;
+  return allUsers.value.filter(u => u.role !== 'ROLE_ADMIN' && u.role !== 'ROLE_PROF' && (u.id % 3) === index);
+};
+
+const selectClasse = (groupe) => {
+  const usersGroup = usersClasse(groupe);
+  const ids = usersGroup.map(u => u.id);
+  ids.forEach(id => {
+    if (!selectedUserIds.value.includes(id)) {
+      selectedUserIds.value.push(id);
+    }
+  });
 };
 
 const loadUsers = async () => {

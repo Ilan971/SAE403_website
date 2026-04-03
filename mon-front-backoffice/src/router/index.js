@@ -139,6 +139,11 @@ const router = createRouter({
           path: 'sae-detail/:id',
           name: 'studentSaeDetail',
           component: () => import('../views/StudentSaeDetailView.vue'),
+        },
+        {
+          path: 'annonces',
+          name: 'studentAnnonceList',
+          component: () => import('../views/AnnonceListView.vue'),
         }
       ]
     }
