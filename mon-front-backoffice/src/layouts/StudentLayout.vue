@@ -74,16 +74,36 @@
       <header class="h-[88px] bg-[#1E232B] flex items-center justify-between px-10 shrink-0 border-b border-gray-800/40 z-20">
          <div class="relative w-[360px]">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input type="text" placeholder="Recherche rapide" class="w-full bg-[#252A33] text-sm text-gray-200 rounded-xl pl-12 pr-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 border border-transparent placeholder-gray-500 transition-all hover:bg-[#2A2F38]" />
+            <input type="text" v-model="globalSearch" @keyup.enter="handleSearch" placeholder="Recherche rapide" class="w-full bg-[#252A33] text-sm text-gray-200 rounded-xl pl-12 pr-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-blue-500 border border-transparent placeholder-gray-500 transition-all hover:bg-[#2A2F38]" />
          </div>
 
          <!-- Profil -->
          <div class="flex items-center space-x-7">
             <!-- Notification Bell -->
-            <button class="relative text-gray-400 hover:text-white transition group">
-               <svg class="h-[22px] w-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-               <span class="absolute -top-1 -right-1.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white tracking-tighter ring-2 ring-[#1E232B]">2</span>
-            </button>
+            <div class="relative">
+               <button @click="showNotifs = !showNotifs" class="relative text-gray-400 hover:text-white transition group focus:outline-none">
+                  <svg class="h-[22px] w-[22px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                  <span class="absolute -top-1 -right-1.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white tracking-tighter ring-2 ring-[#1E232B]">2</span>
+               </button>
+
+               <!-- Dropdown Notifications -->
+               <div v-show="showNotifs" class="absolute right-0 mt-3 w-80 bg-[#252A33] border border-gray-700/50 rounded-xl shadow-2xl py-2 z-50 animate-fade-in origin-top-right">
+                  <div class="px-4 py-2 border-b border-gray-700/50">
+                     <h3 class="text-sm font-bold text-white">Vos Notifications</h3>
+                  </div>
+                  <div class="px-4 py-3 hover:bg-[#2A2F38] transition-colors cursor-pointer border-b border-gray-700/50">
+                     <p class="text-[13px] text-gray-300 font-medium">Une nouvelle SAE a été publiée.</p>
+                     <span class="text-[10px] text-gray-500 mt-1 block">Aujourd'hui, 08:30</span>
+                  </div>
+                  <div class="px-4 py-3 hover:bg-[#2A2F38] transition-colors cursor-pointer border-b border-gray-700/50">
+                     <p class="text-[13px] text-gray-300 font-medium">La date limite pour votre rendu approche.</p>
+                     <span class="text-[10px] text-red-400 mt-1 block">Hier</span>
+                  </div>
+                  <div class="px-4 py-2 text-center pt-3">
+                     <button @click="showNotifs = false" class="text-xs text-blue-400 hover:text-blue-300 font-medium">Tout marquer comme lu</button>
+                  </div>
+               </div>
+            </div>
             <div class="h-6 w-px bg-gray-700"></div>
             <!-- Profile Info -->
             <div @click="router.push('/student/profil')" class="flex items-center space-x-3 cursor-pointer group">
@@ -110,11 +130,23 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
 const authStore = useAuthStore();
 const router = useRouter();
+
+const globalSearch = ref('');
+const showNotifs = ref(false);
+
+const handleSearch = () => {
+  if (globalSearch.value.trim()) {
+    toast.info("Recherche pour : " + globalSearch.value.trim());
+    globalSearch.value = '';
+  }
+};
 
 const handleLogout = () => {
   authStore.logout();

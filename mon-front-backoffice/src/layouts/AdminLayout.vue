@@ -69,16 +69,32 @@
          <!-- Search -->
          <div class="relative w-[400px] group">
             <svg class="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-            <input type="text" placeholder="Rechercher..." class="w-full bg-white/5 text-sm text-gray-200 rounded-2xl pl-12 pr-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 border border-white/5 placeholder-gray-500 transition-all hover:bg-white/10" />
+            <input type="text" v-model="globalSearch" @keyup.enter="handleSearch" placeholder="Rechercher une SAE..." class="w-full bg-white/5 text-sm text-gray-200 rounded-2xl pl-12 pr-4 py-3 focus:outline-none focus:ring-1 focus:ring-blue-500 border border-white/5 placeholder-gray-500 transition-all hover:bg-white/10" />
          </div>
 
          <!-- Profile & Notifs -->
          <div class="flex items-center space-x-7">
             <!-- Notification Bell -->
-            <button class="relative text-gray-400 hover:text-white transition group">
-               <svg class="h-[22px] w-[22px] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-               <span class="absolute -top-1 -right-1.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white shadow-[0_0_10px_rgba(59,130,246,0.5)]">6</span>
-            </button>
+            <div class="relative">
+               <button @click="showNotifs = !showNotifs" class="relative text-gray-400 hover:text-white transition group focus:outline-none">
+                  <svg class="h-[22px] w-[22px] group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                  <span class="absolute -top-1 -right-1.5 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white shadow-[0_0_10px_rgba(59,130,246,0.5)]">1</span>
+               </button>
+               
+               <!-- Dropdown Notifications -->
+               <div v-show="showNotifs" class="absolute right-0 mt-3 w-80 bg-[#1E232B] border border-white/10 rounded-xl shadow-2xl py-2 z-50 animate-fade-in origin-top-right">
+                  <div class="px-4 py-2 border-b border-white/5">
+                     <h3 class="text-sm font-bold text-white">Notifications</h3>
+                  </div>
+                  <div class="px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer border-b border-white/5">
+                     <p class="text-[13px] text-gray-300 font-medium">Recherche globale désormais fonctionnelle.</p>
+                     <span class="text-[10px] text-gray-500 mt-1 block">Il y a un instant</span>
+                  </div>
+                  <div class="px-4 py-2 text-center pt-3">
+                     <button @click="showNotifs = false" class="text-xs text-blue-400 hover:text-blue-300 font-medium">Tout marquer comme lu</button>
+                  </div>
+               </div>
+            </div>
             <div class="h-6 w-px bg-white/10"></div>
             <!-- Profile -->
             <div @click="router.push('/admin/profil')" class="flex items-center space-x-3 cursor-pointer group bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-full border border-white/5 transition-all">
@@ -101,11 +117,22 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
 const router = useRouter();
+
+const globalSearch = ref('');
+const showNotifs = ref(false);
+
+const handleSearch = () => {
+  if (globalSearch.value.trim()) {
+    router.push({ path: '/admin/sae', query: { q: globalSearch.value.trim() } });
+    globalSearch.value = '';
+  }
+};
 
 const handleLogout = () => {
   authStore.logout();

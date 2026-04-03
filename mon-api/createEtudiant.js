@@ -7,15 +7,23 @@ async function main() {
 
   console.log(`Création de l'étudiant ${email}...`);
 
+  // Hacher le mot de passe
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   // Vérifier si l'utilisateur existe déjà
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    console.log('Cet étudiant existe déjà avec l\'ID:', existingUser.id);
+    console.log('Cet étudiant existe déjà. Mise à jour du mot de passe...');
+    await prisma.user.update({
+      where: { id: existingUser.id },
+      data: { 
+        password: hashedPassword,
+        role: 'ROLE_USER' 
+      }
+    });
+    console.log('Données mises à jour avec succès !');
     return;
   }
-
-  // Hacher le mot de passe
-  const hashedPassword = await bcrypt.hash(password, 10);
 
   // Insérer l'utilisateur dans la base de données
   const user = await prisma.user.create({

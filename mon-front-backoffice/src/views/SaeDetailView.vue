@@ -4,7 +4,7 @@
     <div class="sm:flex sm:items-center sm:justify-between mb-8">
       <div>
         <div class="flex items-center gap-4 mb-3">
-          <router-link :to="authStore.user?.role === 'ROLE_ADMIN' ? '/sae' : '/teacher/sae'" 
+          <router-link :to="authStore.user?.role === 'ROLE_ADMIN' ? '/admin/sae' : '/teacher/sae'" 
             class="flex items-center text-sm font-medium transition-colors"
             :class="authStore.user?.role === 'ROLE_ADMIN' ? 'text-indigo-600 hover:text-indigo-800' : 'text-emerald-400 hover:text-emerald-300'">
             <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,7 +50,7 @@
             </div>
           </div>
 
-          <!-- Documents -->
+          <!-- Documents de référence (Consignes / Ressources) -->
           <div :class="cardClass" class="shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
             <div v-if="isProcessing" class="absolute inset-0 bg-[#0A0D14]/60 backdrop-blur-sm z-10 flex items-center justify-center"></div>
 
@@ -59,11 +59,11 @@
                 <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
-                <h3 class="text-base font-semibold leading-6" :class="titleClass">Documents associés</h3>
+                <h3 class="text-base font-semibold leading-6" :class="titleClass">Documents de référence</h3>
               </div>
               <button @click="openDocModal" 
                 class="text-sm font-bold flex items-center px-4 py-2 rounded-xl transition-all shadow-lg"
-                :class="authStore.user?.role === 'ROLE_ADMIN' ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100' : 'text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 ring-1 ring-emerald-500/30'">
+                :class="authStore.user?.role === 'ROLE_ADMIN' ? 'text-indigo-600 bg-indigo-100 hover:bg-indigo-100' : 'text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 ring-1 ring-emerald-500/30'">
                 <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -72,13 +72,13 @@
             </div>
             
             <div class="p-0">
-              <ul v-if="sae.documents && sae.documents.length > 0" class="divide-y" :class="authStore.user?.role === 'ROLE_ADMIN' ? 'divide-gray-100' : 'divide-white/5'">
-                <li v-for="doc in sae.documents" :key="doc.id" class="px-6 py-4 flex items-center justify-between transition-colors group" :class="authStore.user?.role === 'ROLE_ADMIN' ? 'hover:bg-gray-50' : 'hover:bg-white/5'">
+              <ul v-if="referenceDocs.length > 0" class="divide-y" :class="authStore.user?.role === 'ROLE_ADMIN' ? 'divide-gray-100' : 'divide-white/5'">
+                <li v-for="doc in referenceDocs" :key="doc.id" class="px-6 py-4 flex items-center justify-between transition-colors group" :class="authStore.user?.role === 'ROLE_ADMIN' ? 'hover:bg-gray-50' : 'hover:bg-white/5'">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10 rounded-xl flex items-center justify-center border"
                       :class="authStore.user?.role === 'ROLE_ADMIN' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 'bg-white/5 text-emerald-400 border-white/10'">
                       <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414-5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
                     <div class="ml-4">
@@ -164,7 +164,7 @@
                     </div>
                     <div class="ml-4">
                       <p class="text-sm font-bold" :class="authStore.user?.role === 'ROLE_ADMIN' ? 'text-gray-900' : 'text-gray-200'">{{ user.prenom }} {{ user.nom }}</p>
-                      <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">{{ user.role === 'ROLE_ADMIN' ? 'Enseignant' : (user.role === 'ROLE_PROF' ? 'Enseignant' : 'Étudiant') }}</p>
+                      <p class="text-[10px] font-bold text-gray-500 tracking-wider uppercase">{{ user.role === 'ROLE_ADMIN' ? 'Administrateur' : (user.role === 'ROLE_PROF' ? 'Enseignant' : 'Étudiant') }}</p>
                     </div>
                   </div>
                 </li>
@@ -177,7 +177,7 @@
         </div>
       </div>
 
-      <!-- Section Notation -->
+      <!-- Section Notation / Rendu des Étudiants -->
       <div id="grading" :class="cardClass" class="shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl overflow-hidden relative">
         <div v-if="isProcessingNotes" class="absolute inset-0 bg-[#0A0D14]/60 backdrop-blur-sm z-10 flex items-center justify-center"></div>
 
@@ -186,7 +186,7 @@
             <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
             </svg>
-            <h3 class="text-base font-semibold leading-6" :class="titleClass">Notes des étudiants</h3>
+            <h3 class="text-base font-semibold leading-6" :class="titleClass">Évaluation des étudiants</h3>
           </div>
           <span v-if="studentUsers.length > 0" class="text-xs font-bold px-3 py-1 rounded-full border"
             :class="authStore.user?.role === 'ROLE_ADMIN' ? 'bg-gray-100 text-gray-500 border-gray-200' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'">
@@ -200,8 +200,9 @@
               <thead>
                 <tr :class="headerClass" class="text-gray-400 text-[11px] font-bold uppercase tracking-wider border-b">
                   <th class="py-4 px-6">Étudiant</th>
+                  <th class="py-4 px-6">Fichier Déposé</th>
                   <th class="py-4 px-6 w-32">Note /20</th>
-                  <th class="py-4 px-6">Date</th>
+                  <th class="py-4 px-6">Date Notation</th>
                   <th class="py-4 px-6">Commentaire</th>
                   <th class="py-4 px-6 w-28 text-right">Action</th>
                 </tr>
@@ -220,6 +221,21 @@
                           <p class="text-[11px] text-gray-500 font-medium">{{ student.email }}</p>
                         </div>
                       </div>
+                    </td>
+                    <!-- COLONNE LIVRABLE (Fichiers déposés) -->
+                    <td class="py-4 px-6">
+                      <div v-if="getStudentSubmission(student.id)" class="flex items-center">
+                        <a :href="getStudentSubmission(student.id).cheminFichier" target="_blank" 
+                           class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all border group/link"
+                           :class="authStore.user?.role === 'ROLE_ADMIN' ? 'bg-blue-50 text-blue-600 border-blue-100 hover:bg-blue-100' : 'bg-emerald-500/5 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/30'">
+                           <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+                           <span class="max-w-[120px] truncate">{{ getStudentSubmission(student.id).nom }}</span>
+                        </a>
+                      </div>
+                      <span v-else class="text-[10px] text-gray-500 italic flex items-center gap-1.5 opacity-60">
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Aucun dépôt
+                      </span>
                     </td>
                     <td class="py-4 px-6 text-center">
                       <input type="number" step="0.5" min="0" max="20"
@@ -249,7 +265,7 @@
                         class="inline-flex items-center px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-lg active:scale-95 disabled:opacity-50"
                         :class="getExistingNote(student.id) ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/30' : 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-500/20'">
                         <svg v-if="isSavingGrade === student.id" class="animate-spin h-3 w-3 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                        {{ getExistingNote(student.id) ? 'Modifier' : 'Valider' }}
+                        {{ getExistingNote(student.id) ? 'Enregistré' : 'Valider' }}
                       </button>
                     </td>
                   </template>
@@ -261,7 +277,7 @@
             <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
                <svg class="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
             </div>
-            <p class="text-sm text-gray-400 font-medium">Aucun étudiant assigné.</p>
+            <p class="text-sm text-gray-400 font-medium">Aucun étudiant assigné à ce projet.</p>
           </div>
         </div>
       </div>
@@ -276,7 +292,7 @@
       <p class="text-gray-400">Cette ressource n'existe plus ou vous n'avez pas les droits pour y accéder.</p>
     </div>
 
-    <!-- Teleport Modals -->
+    <!-- Modals -->
     <Teleport to="body">
        <!-- Modal Documents -->
        <div v-if="showDocModal" class="relative z-[100]" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -310,7 +326,6 @@
                   <select v-model="docFormData.type" required class="w-full bg-white/5 rounded-xl border border-white/10 py-3 px-4 text-white focus:ring-1 focus:ring-emerald-500 outline-none appearance-none">
                     <option value="consigne" class="bg-[#1E232B]">Consigne</option>
                     <option value="ressource" class="bg-[#1E232B]">Ressource</option>
-                    <option value="rendu" class="bg-[#1E232B]">Rendu attendu</option>
                   </select>
                 </div>
                 <div v-if="docFormError" class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-500">
@@ -362,9 +377,21 @@ const studentUsers = computed(() => {
   return sae.value.users.filter(u => u.role === 'ROLE_USER');
 });
 
+const referenceDocs = computed(() => {
+  if (!sae.value || !sae.value.documents) return [];
+  // Exclure les rendus étudiants de la liste globale des documents de référence
+  return sae.value.documents.filter(doc => doc.type !== 'rendu');
+});
+
 const notedCount = computed(() => notes.value.length);
 
 const getExistingNote = (userId) => notes.value.find(n => n.etudiantId === userId);
+
+// Récupérer le fichier déposé par un étudiant spécifique pou cette SAE
+const getStudentSubmission = (userId) => {
+  if (!sae.value || !sae.value.documents) return null;
+  return sae.value.documents.find(doc => doc.userId === userId && doc.type === 'rendu');
+};
 
 const fetchNotes = async () => {
   try {
@@ -422,7 +449,7 @@ const loadSaeData = async () => {
     const data = response.data.data || response.data;
     sae.value = data;
     
-    // Initialiser les inputs par défaut IMMEDIATEMENT pour éviter les crashs de template
+    // Initialiser les inputs par défaut IMMEDIATEMENT
     if (data.users) {
       data.users.forEach(u => {
         if (u.role === 'ROLE_USER') {

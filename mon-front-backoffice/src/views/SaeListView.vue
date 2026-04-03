@@ -260,12 +260,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import api from '../services/api';
 import { useAuthStore } from '../stores/authStore';
 import { toast } from 'vue3-toastify';
 
 const authStore = useAuthStore();
+const route = useRoute();
 
 const saes = ref([]);
 const isLoading = ref(true);
@@ -338,7 +340,18 @@ const fetchSaes = async () => {
 };
 
 onMounted(() => {
+  if (route.query.q) {
+    searchQuery.value = route.query.q;
+  }
   fetchSaes();
+});
+
+watch(() => route.query.q, (newQ) => {
+  if (newQ !== undefined) {
+    searchQuery.value = newQ;
+  } else {
+    searchQuery.value = '';
+  }
 });
 
 // --- ACTIONS CRUD ---
