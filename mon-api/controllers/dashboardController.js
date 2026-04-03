@@ -4,11 +4,10 @@ exports.getEtudiantDashboard = async (req, res) => {
     try {
         const userId = req.user.id;
         
-        // Les SAE en cours et les échéances proches (triées par date)
+        // Toutes les SAE (pour que les nouveaux inscrits les voient)
         const saes = await prisma.sae.findMany({
-            where: { users: { some: { id: userId } } }, 
             orderBy: { dateEcheance: 'asc' },
-            include: { documents: { where: { type: 'consigne' } } }
+            include: { documents: { where: { type: 'consigne' } }, users: { select: { id: true } } }
         });
 
         const rendus = await prisma.document.findMany({

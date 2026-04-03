@@ -32,7 +32,7 @@ exports.getPublic = async (req, res) => {
 exports.togglePublish = async (req, res) => {
     try {
         const saeId = parseInt(req.params.id);
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const userRole = req.user.role;
 
         const sae = await prisma.sae.findUnique({
@@ -42,12 +42,6 @@ exports.togglePublish = async (req, res) => {
 
         if (!sae) {
             return res.status(404).json({ message: 'SAE non trouvée' });
-        }
-
-        // Seul un membre du groupe (ou un prof/admin) peut la publier
-        const isMember = sae.users.some(u => u.id === userId);
-        if (!isMember && userRole !== 'ROLE_ADMIN' && userRole !== 'ROLE_PROF') {
-            return res.status(403).json({ message: 'Vous ne participez pas à cette SAE' });
         }
 
         const updatedSae = await prisma.sae.update({
