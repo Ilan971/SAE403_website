@@ -17,10 +17,10 @@
           <a href="#campus" class="hover:text-white transition-colors">Le Campus</a>
         </div>
         <div class="flex items-center gap-4">
-          <router-link to="/login" class="px-5 py-2.5 text-sm font-bold text-gray-300 hover:text-white border border-gray-700 hover:border-gray-500 rounded-xl transition-all">
+          <router-link to="/login" class="px-7 py-3 text-[15px] font-extrabold text-cyan-400 border border-cyan-500/40 bg-cyan-500/10 hover:bg-cyan-500/20 hover:text-cyan-300 hover:border-cyan-400 hover:-translate-y-0.5 rounded-xl transition-all">
             Connexion
           </router-link>
-          <router-link to="/register" class="px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg shadow-blue-500/25 transition-all">
+          <router-link to="/register" class="px-7 py-3 text-[15px] font-extrabold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl shadow-lg shadow-purple-500/30 hover:-translate-y-0.5 transition-all">
             S'inscrire
           </router-link>
         </div>
@@ -49,11 +49,11 @@
             Explorez les réalisations de la formation MMI : développement web, design UX/UI,
             audiovisuel, communication digitale et bien plus encore.
           </p>
-          <div class="flex flex-wrap gap-4">
-            <a href="#projets" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl text-[15px] font-bold shadow-xl shadow-blue-500/25 transition-all hover:-translate-y-0.5">
+          <div class="flex flex-wrap gap-5 mt-6">
+            <a href="#projets" class="px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl text-lg font-extrabold shadow-xl shadow-blue-500/30 transition-all hover:-translate-y-1">
               Explorer les projets
             </a>
-            <a href="#formation" class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-2xl text-[15px] font-bold text-gray-300 hover:text-white transition-all hover:-translate-y-0.5">
+            <a href="#formation" class="px-10 py-5 border-2 border-emerald-500/50 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 hover:border-emerald-400 hover:text-emerald-300 rounded-2xl text-lg font-extrabold transition-all hover:-translate-y-1">
               En savoir plus
             </a>
           </div>
