@@ -25,7 +25,9 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+    const isLoginRequest = error.config && error.config.url === '/login';
+
+    if (!isLoginRequest && error.response && (error.response.status === 401 || error.response.status === 403)) {
       const authStore = useAuthStore();
       authStore.logout();
       window.location.href = '/login'; // Redirection brute si non autorisé
